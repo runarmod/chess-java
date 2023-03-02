@@ -1,4 +1,4 @@
-package exampleproject;
+package kalkulator;
 
 public class Calculator {
     private String operator;
