@@ -14,6 +14,9 @@ public abstract class Piece {
     public Piece(Position position, ChessBoard board, Color color) {
         this.pos = position;
         this.board = board;
+        if (board.getPosition(position) != this){
+            board.setPosition(position, this);
+        }
         this.color = color;
     }
 

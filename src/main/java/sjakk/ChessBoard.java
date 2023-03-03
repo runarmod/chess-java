@@ -26,6 +26,8 @@ public class ChessBoard {
     }
 
     public void setPosition(Position position, Piece piece) {
+        if (getPosition(position) == piece)
+            return;
         board.get(position.getY()).set(position.getX(), piece);
     }
 

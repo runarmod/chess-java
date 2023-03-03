@@ -8,7 +8,7 @@ import sjakk.ChessBoard;
 import sjakk.Color;
 import sjakk.Position;
 
-public class Rook extends Piece {
+public class Rook extends LinearPiece {
 
     public Rook(Position position, ChessBoard board, Color color) {
         super(position, board, color);
@@ -16,28 +16,12 @@ public class Rook extends Piece {
 
     @Override
     public Collection<Position> getLegalMoves() {
-        Collection<Position> legalMoves = new ArrayList<Position>();
-
-        for (Position tmpDir : List.of(
+        Collection<Position> defaultMoves = getLinearMoves(
                 new Position(0, 1),
                 new Position(0, -1),
                 new Position(1, 0),
-                new Position(-1, 0))) {
-
-            Position currentPosition = new Position(pos).add(tmpDir);
-            while (currentPosition.insideBoard()) {
-                if (board.getPosition(currentPosition) == null) {
-                    legalMoves.add(currentPosition);
-                } else {
-                    if (board.getPosition(currentPosition).getColor() != color) {
-                        legalMoves.add(currentPosition);
-                    }
-                    break;
-                }
-                currentPosition = currentPosition.add(tmpDir);
-            }
-        }
-        return legalMoves;
+                new Position(-1, 0));
+        return defaultMoves;
     }
 
     public static void main(String[] args) {
