@@ -6,6 +6,7 @@ import sjakk.pieces.Piece;
 
 public class ChessBoard {
     private ArrayList<ArrayList<Piece>> board;
+    private ArrayList<String> moves = new ArrayList<String>();
 
     public ChessBoard() {
         board = new ArrayList<ArrayList<Piece>>();
@@ -17,7 +18,7 @@ public class ChessBoard {
         }
     }
 
-    public boolean isLegalMove(Piece piece, Position position) {
+    public boolean isValidMove(Piece piece, Position position) {
         return piece.isValidMove(position);
     }
 
@@ -32,7 +33,24 @@ public class ChessBoard {
     }
 
     public void move(Piece piece, Position to) {
+        moves.add(piece.getPos().toString() + to.toString());
         setPosition(piece.getPos(), null);
         setPosition(to, piece);
+        piece.setPos(to);
+    }
+
+    public String getMoves() {
+        String movesString = "    WHITE | BLACK\n";
+        for (int i = 0; i < moves.size(); i++) {
+            if (i % 2 == 0) {
+                int moveNr = (i / 2 + 1);
+                String moveNrString = String.format("%2s", moveNr);
+                movesString += moveNrString + ". ";
+                movesString += moves.get(i);
+            } else {
+                movesString += "  | " + moves.get(i) + "\n";
+            }
+        }
+        return movesString;
     }
 }

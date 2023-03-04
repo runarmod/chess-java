@@ -32,7 +32,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position [x=" + x + ", y=" + y + "]";
+        return String.format("%c%d", getX() + 'a', getY() + 1);
     }
 
     @Override

@@ -82,6 +82,15 @@ public abstract class Piece {
     }
 
     /**
+     * Sets the position of the piece.
+     * 
+     * @param pos the new position of the piece
+     */
+    public void setPos(Position pos) {
+        this.pos = pos;
+    }
+
+    /**
      * Moves the piece to the given position on the board.
      * 
      * @throws IllegalArgumentException if the move is not legal
@@ -92,7 +101,6 @@ public abstract class Piece {
             throw new IllegalArgumentException("Illegal move");
         }
         board.move(this, to);
-        this.pos = to;
     }
 
 }
