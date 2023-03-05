@@ -15,6 +15,10 @@ public class Knight extends Piece {
 
     @Override
     public boolean isValidMove(Position to) {
+        return getLegalMoves().contains(to);
+    }
+
+    private boolean validOnBoard(Position to) {
         if (!to.insideBoard())
             return false;
         if (board.getPosition(to) == null)
@@ -32,7 +36,7 @@ public class Knight extends Piece {
         int[] dY = { 1, 2, 2, 1, -1, -2, -2, -1 };
         for (int i = 0; i < dX.length; i++) {
             Position to = new Position(getX() + dX[i], getY() + dY[i]);
-            if (isValidMove(to))
+            if (validOnBoard(to))
                 legalMoves.add(to);
         }
 
