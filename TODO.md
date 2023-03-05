@@ -1,8 +1,20 @@
 # TODO
 
-- [ ] Add knight
+- [x] Add knight
 - [ ] Add king
-- [ ] Create test for queen
+- [x] Create test for queen
+- [x] Create test for knight
 - [ ] Create test for king
-- [ ] Create test for knight
 - [ ] Fix en passant
+- [ ] Fix castling
+
+
+## Features
+
+- Title
+- Chessboard
+- Timer
+- Import/export position
+- Restart game
+- Liste med trekk
+- Tatte brikker

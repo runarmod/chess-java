@@ -1,21 +1,14 @@
 package sjakk.pieces;
 
 import java.util.Collection;
-import java.util.Map;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import sjakk.ChessBoard;
 import sjakk.PieceColor;
 import sjakk.Position;
 
 public abstract class Piece {
-    private static final Image allPiecesImg = new Image(
-            ChessBoard.class.getResource("pieces.png").toString());
-    private static Map<String, Integer> imgColIdx = Map.of("King", 0, "Queen", 1, "Bishop", 2, "Knight", 3, "Rook",
-            4, "Pawn", 5);
-
     protected Position pos;
     protected ChessBoard board;
     protected PieceColor color;
@@ -37,7 +30,8 @@ public abstract class Piece {
         }
         this.color = color;
 
-        cropPieceImage(name);
+        if (!board.isTest())
+            cropPieceImage(name);
     }
 
     /**
@@ -117,7 +111,7 @@ public abstract class Piece {
      * @throws IllegalArgumentException if the move is not legal
      * @param to the position to move to
      */
-    public void move(Position to) {
+    public void move(Position to) throws IllegalArgumentException {
         if (!isValidMove(to)) {
             throw new IllegalArgumentException("Illegal move");
         }
@@ -131,10 +125,10 @@ public abstract class Piece {
      * @param pieceType the type of the piece (ex. "King")
      */
     private void cropPieceImage(String pieceType) {
-        this.imageView = new ImageView(allPiecesImg);
+        this.imageView = new ImageView(ChessBoard.getAllPiecesImg());
 
         int imgY = (color == PieceColor.WHITE ? 0 : 1);
-        int coloumnIndex = imgColIdx.get(pieceType);
+        int coloumnIndex = ChessBoard.getPieceImageIndex(pieceType);
         final int size = 50;
 
         this.imageView.setViewport(new Rectangle2D(coloumnIndex * size, imgY * size, size, size));

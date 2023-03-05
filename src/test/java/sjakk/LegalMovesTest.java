@@ -2,6 +2,7 @@ package sjakk;
 
 // import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class LegalMovesTest {
 
     @BeforeEach
     public void setUp() {
-        board = new ChessBoard();
+        board = new ChessBoard(true);
     }
 
     @Test
@@ -88,6 +89,9 @@ public class LegalMovesTest {
         actualLegal.add(new Position(7, 5));
 
         checkCollectionsEqual(knight.getLegalMoves(), actualLegal, "Knight");
+        assertFalse(knight.isValidMove(new Position(5, 4)));
+        assertFalse(knight.isValidMove(new Position(5, 5)));
+        assertFalse(knight.isValidMove(new Position(5, 6)));
     }
 
     @Test
