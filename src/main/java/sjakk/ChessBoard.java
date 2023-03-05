@@ -1,10 +1,11 @@
 package sjakk;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import sjakk.pieces.Piece;
+import sjakk.pieces.*;
 
-public class ChessBoard {
+public class ChessBoard implements Iterable<Piece> {
     private ArrayList<ArrayList<Piece>> board;
     private ArrayList<String> moves = new ArrayList<String>();
 
@@ -16,6 +17,41 @@ public class ChessBoard {
                 board.get(i).add(null);
             }
         }
+        initializeDefaultSetup();
+    }
+
+    private void initializeDefaultSetup() {
+        for (int i = 0; i < 8; i++) {
+            new Pawn(new Position(i, 1), this, PieceColor.WHITE);
+            new Pawn(new Position(i, 6), this, PieceColor.BLACK);
+        }
+
+        new Rook(new Position(0, 0), this, PieceColor.WHITE);
+        new Rook(new Position(7, 0), this, PieceColor.WHITE);
+
+        new Rook(new Position(0, 7), this, PieceColor.BLACK);
+        new Rook(new Position(7, 7), this, PieceColor.BLACK);
+
+        new Knight(new Position(1, 0), this, PieceColor.WHITE);
+        new Knight(new Position(6, 0), this, PieceColor.WHITE);
+
+        new Knight(new Position(1, 7), this, PieceColor.BLACK);
+        new Knight(new Position(6, 7), this, PieceColor.BLACK);
+
+        new Bishop(new Position(2, 0), this, PieceColor.WHITE);
+        new Bishop(new Position(5, 0), this, PieceColor.WHITE);
+
+        new Bishop(new Position(2, 7), this, PieceColor.BLACK);
+        new Bishop(new Position(5, 7), this, PieceColor.BLACK);
+
+        new Queen(new Position(3, 0), this, PieceColor.WHITE);
+
+        new Queen(new Position(3, 7), this, PieceColor.BLACK);
+
+        new King(new Position(4, 0), this, PieceColor.WHITE);
+
+        new King(new Position(4, 7), this, PieceColor.BLACK);
+
     }
 
     public boolean isValidMove(Piece piece, Position position) {
@@ -52,5 +88,10 @@ public class ChessBoard {
             }
         }
         return movesString;
+    }
+
+    @Override
+    public Iterator<Piece> iterator() {
+        return new ChessBoardIterator(this);
     }
 }

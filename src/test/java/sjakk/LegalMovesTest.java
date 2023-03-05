@@ -28,7 +28,7 @@ public class LegalMovesTest {
 
     @Test
     public void testBishopEmptyBoard() {
-        Bishop bishop = new Bishop(new Position(5, 4), board, Color.WHITE);
+        Bishop bishop = new Bishop(new Position(5, 4), board, PieceColor.WHITE);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         // Diagonal down right
@@ -52,9 +52,9 @@ public class LegalMovesTest {
 
     @Test
     public void testBishopBlockingPiece() {
-        Bishop bishop = new Bishop(new Position(6, 4), board, Color.WHITE);
-        Rook blockingPiece = new Rook(new Position(4, 6), board, Color.WHITE);
-        Rook capturePiece = new Rook(new Position(3, 1), board, Color.BLACK);
+        Bishop bishop = new Bishop(new Position(6, 4), board, PieceColor.WHITE);
+        Rook blockingPiece = new Rook(new Position(4, 6), board, PieceColor.WHITE);
+        Rook capturePiece = new Rook(new Position(3, 1), board, PieceColor.BLACK);
 
         board.setPosition(new Position(4, 6), blockingPiece);
         board.setPosition(new Position(3, 1), capturePiece);
@@ -75,7 +75,7 @@ public class LegalMovesTest {
 
     @Test
     public void testKnightEmptyBoard() {
-        Knight knight = new Knight(new Position(5, 4), board, Color.WHITE);
+        Knight knight = new Knight(new Position(5, 4), board, PieceColor.WHITE);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(3, 3));
@@ -92,9 +92,9 @@ public class LegalMovesTest {
 
     @Test
     public void testKnightBlockingPiece() {
-        Knight knight = new Knight(new Position(6, 5), board, Color.WHITE);
-        Piece blockingPiece = new Rook(new Position(5, 3), board, Color.WHITE);
-        Piece capturePiece = new Rook(new Position(7, 7), board, Color.BLACK);
+        Knight knight = new Knight(new Position(6, 5), board, PieceColor.WHITE);
+        Piece blockingPiece = new Rook(new Position(5, 3), board, PieceColor.WHITE);
+        Piece capturePiece = new Rook(new Position(7, 7), board, PieceColor.BLACK);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(7, 7));
@@ -108,7 +108,7 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnFirstMove() {
-        Pawn pawn = new Pawn(new Position(4, 1), board, Color.WHITE);
+        Pawn pawn = new Pawn(new Position(4, 1), board, PieceColor.WHITE);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(4, 2));
@@ -119,7 +119,7 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnNotFirstMove() {
-        Pawn pawn = new Pawn(new Position(4, 2), board, Color.WHITE);
+        Pawn pawn = new Pawn(new Position(4, 2), board, PieceColor.WHITE);
         pawn.move(new Position(4, 3));
 
         Collection<Position> actualLegal = new ArrayList<Position>();
@@ -130,9 +130,9 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnEnPassant() {
-        Pawn pawn = new Pawn(new Position(4, 1), board, Color.WHITE);
-        Pawn tmp = new Pawn(new Position(0, 6), board, Color.BLACK);
-        Pawn toTake = new Pawn(new Position(5, 6), board, Color.BLACK);
+        Pawn pawn = new Pawn(new Position(4, 1), board, PieceColor.WHITE);
+        Pawn tmp = new Pawn(new Position(0, 6), board, PieceColor.BLACK);
+        Pawn toTake = new Pawn(new Position(5, 6), board, PieceColor.BLACK);
         pawn.move(new Position(4, 3));
         tmp.move(new Position(0, 4));
         pawn.move(new Position(4, 4));
@@ -147,7 +147,7 @@ public class LegalMovesTest {
 
     @Test
     public void testRookEmptyBoard() {
-        Rook rook = new Rook(new Position(0, 0), board, Color.WHITE);
+        Rook rook = new Rook(new Position(0, 0), board, PieceColor.WHITE);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 1; i < 8; i++) {
@@ -160,10 +160,10 @@ public class LegalMovesTest {
 
     @Test
     public void testRookBlockingPiece() {
-        Piece blockingPiece = new Rook(new Position(3, 4), board, Color.BLACK);
+        Piece blockingPiece = new Rook(new Position(3, 4), board, PieceColor.BLACK);
         board.setPosition(new Position(3, 4), blockingPiece);
 
-        Rook rook = new Rook(new Position(4, 4), board, Color.BLACK);
+        Rook rook = new Rook(new Position(4, 4), board, PieceColor.BLACK);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 0; i < 8; i++) {
@@ -185,10 +185,10 @@ public class LegalMovesTest {
 
     @Test
     public void testRookCapturePiece() {
-        Rook captureRook = new Rook(new Position(3, 4), board, Color.WHITE);
+        Rook captureRook = new Rook(new Position(3, 4), board, PieceColor.WHITE);
         board.setPosition(new Position(3, 4), captureRook);
 
-        Rook rook = new Rook(new Position(4, 4), board, Color.BLACK);
+        Rook rook = new Rook(new Position(4, 4), board, PieceColor.BLACK);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 0; i < 8; i++) {
@@ -205,7 +205,7 @@ public class LegalMovesTest {
 
     @Test
     public void testQueenEmptyBoard() {
-        Queen queen = new Queen(new Position(4, 4), board, Color.WHITE);
+        Queen queen = new Queen(new Position(4, 4), board, PieceColor.WHITE);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 0; i < 8; i++) {
@@ -232,9 +232,9 @@ public class LegalMovesTest {
 
     @Test
     public void testQueenBlockingPiece() {
-        Queen queen = new Queen(new Position(4, 4), board, Color.WHITE);
-        Piece blockingPiece = new Rook(new Position(4, 6), board, Color.WHITE);
-        Piece capturePiece = new Rook(new Position(2, 2), board, Color.BLACK);
+        Queen queen = new Queen(new Position(4, 4), board, PieceColor.WHITE);
+        Piece blockingPiece = new Rook(new Position(4, 6), board, PieceColor.WHITE);
+        Piece capturePiece = new Rook(new Position(2, 2), board, PieceColor.BLACK);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
 

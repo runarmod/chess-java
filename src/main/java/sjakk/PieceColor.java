@@ -1,11 +1,11 @@
 package sjakk;
 
-public enum Color {
+public enum PieceColor {
     WHITE(1), BLACK(-1);
 
     private int dir;
 
-    private Color(int dir) {
+    private PieceColor(int dir) {
         this.dir = dir;
     }
 

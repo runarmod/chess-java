@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import sjakk.ChessBoard;
-import sjakk.Color;
+import sjakk.PieceColor;
 import sjakk.Position;
 
 public abstract class LinearPiece extends Piece {
     
-        public LinearPiece(Position position, ChessBoard board, Color color) {
-            super(position, board, color);
+        public LinearPiece(Position position, ChessBoard board, PieceColor color, String name) {
+            super(position, board, color, name);
         }
 
         public Collection<Position> getLinearMoves(Position... legalDirections) {
