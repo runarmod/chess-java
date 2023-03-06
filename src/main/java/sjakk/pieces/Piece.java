@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import sjakk.ChessBoard;
 import sjakk.PieceColor;
 import sjakk.Position;
@@ -13,6 +14,7 @@ public abstract class Piece {
     protected ChessBoard board;
     protected PieceColor color;
     protected ImageView imageView;
+    protected int moveCount = 0;
 
     /**
      * Creates a new piece at the given position on the given board. The pice is
@@ -116,6 +118,29 @@ public abstract class Piece {
             throw new IllegalArgumentException("Illegal move");
         }
         board.move(this, to);
+    }
+
+    /**
+     * Sets the background of all legal moves to light green.
+     */
+    public void setLegalMovesBackground() {
+        for (Position pos : getLegalMoves()) {
+            board.setGridBackgroundColor(pos.getX(), pos.getY(), Color.LIGHTGREEN);
+        }
+    }
+
+    /**
+     * Gets the number of times the piece has moved.
+     */
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    /**
+     * Adds one to the move count.
+     */
+    public void addMovedCount() {
+        moveCount++;
     }
 
     /**

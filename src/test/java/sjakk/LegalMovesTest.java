@@ -133,6 +133,29 @@ public class LegalMovesTest {
     }
 
     @Test
+    public void testPawnBlockingPieceFirstMove() {
+        Pawn pawn = new Pawn(new Position(4, 1), board, PieceColor.WHITE);
+        Piece blockingPiece = new Rook(new Position(4, 2), board, PieceColor.WHITE);
+
+        Collection<Position> actualLegal = new ArrayList<Position>();
+
+        checkCollectionsEqual(pawn.getLegalMoves(), actualLegal, "Pawn");
+    }
+
+    @Test
+    public void testPawnTakePiece() {
+        Pawn pawn = new Pawn(new Position(4, 3), board, PieceColor.WHITE);
+        Piece blockingPiece = new Rook(new Position(5, 4), board, PieceColor.BLACK);
+
+        Collection<Position> actualLegal = new ArrayList<Position>();
+        actualLegal.add(new Position(5, 4));
+        actualLegal.add(new Position(4, 4));
+        actualLegal.add(new Position(4, 5));
+
+        checkCollectionsEqual(pawn.getLegalMoves(), actualLegal, "Pawn");
+    }
+
+    @Test
     public void testPawnEnPassant() {
         Pawn pawn = new Pawn(new Position(4, 1), board, PieceColor.WHITE);
         Pawn tmp = new Pawn(new Position(0, 6), board, PieceColor.BLACK);

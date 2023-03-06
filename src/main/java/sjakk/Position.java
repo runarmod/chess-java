@@ -1,5 +1,7 @@
 package sjakk;
 
+import javafx.scene.input.MouseEvent;
+
 public class Position {
     private int x;
     private int y;
@@ -12,6 +14,10 @@ public class Position {
     public Position(Position position) {
         this.x = position.getX();
         this.y = position.getY();
+    }
+
+    public Position(MouseEvent event) {
+        this((int) event.getX() / 50, 7 - (int) event.getY() / 50);
     }
 
     public int getX() {

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import sjakk.pieces.*;
 
 public class ChessBoard implements Iterable<Piece> {
@@ -20,6 +21,8 @@ public class ChessBoard implements Iterable<Piece> {
         return imgColIdx.get(pieceType);
     }
 
+    private ArrayList<ArrayList<Color>> gridBackgroundColor;
+
     private ArrayList<ArrayList<Piece>> board;
 
     private ArrayList<String> moves = new ArrayList<String>();
@@ -29,6 +32,8 @@ public class ChessBoard implements Iterable<Piece> {
     private PieceColor turn = PieceColor.WHITE;
 
     private boolean test = false;
+
+    private Piece lastMovedPiece;
 
     public ChessBoard() {
         this(false);
@@ -45,9 +50,21 @@ public class ChessBoard implements Iterable<Piece> {
             }
         }
 
+        resetGridBackgroundMatrix();
+
         if (!test)
             allPiecesImg = new Image(getClass().getResource("pieces.png").toString());
 
+    }
+
+    public void resetGridBackgroundMatrix() {
+        gridBackgroundColor = new ArrayList<ArrayList<Color>>();
+        for (int i = 0; i < 8; i++) {
+            gridBackgroundColor.add(new ArrayList<Color>());
+            for (int j = 0; j < 8; j++) {
+                gridBackgroundColor.get(i).add((i + j) % 2 == 0 ? Color.WHITE : Color.GRAY);
+            }
+        }
     }
 
     public boolean isTest() {
@@ -73,10 +90,17 @@ public class ChessBoard implements Iterable<Piece> {
      * @param position The position that was clicked.
      */
     public void positionPressed(Position position) {
+        resetGridBackgroundMatrix();
         if (selectedPiece == null) {
             selectedPiece = getPosition(position);
+            // If the selected piece is not the correct color, deselect it.
             if (selectedPiece != null && selectedPiece.getColor() != turn) {
                 selectedPiece = null;
+                return;
+            }
+            if (selectedPiece != null) {
+                setGridBackgroundColor(position.getX(), position.getY(), Color.YELLOW);
+                selectedPiece.setLegalMovesBackground();
             }
             return;
         }
@@ -91,6 +115,7 @@ public class ChessBoard implements Iterable<Piece> {
             selectedPiece = null;
             return;
         }
+
         selectedPiece = null;
         turn = (turn == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
     }
@@ -138,6 +163,8 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     public Piece getPosition(Position position) {
+        if (position.getX() < 0 || position.getX() > 7 || position.getY() < 0 || position.getY() > 7)
+            return null;
         return board.get(position.getY()).get(position.getX());
     }
 
@@ -152,6 +179,14 @@ public class ChessBoard implements Iterable<Piece> {
         setPosition(piece.getPos(), null);
         setPosition(to, piece);
         piece.setPos(to);
+        if (piece instanceof Pawn && ((Pawn) piece).getHasMadeAnPassant()) {
+            System.out.println("Pawn has made an passant");
+            Position pos = new Position(piece.getX(), piece.getY() - piece.getColor().getDir());
+            setPosition(pos, null);
+        }
+
+        lastMovedPiece = piece;
+        piece.addMovedCount();
     }
 
     public String getMoves() {
@@ -172,5 +207,17 @@ public class ChessBoard implements Iterable<Piece> {
     @Override
     public Iterator<Piece> iterator() {
         return new ChessBoardIterator(this);
+    }
+
+    public Color getGridBackgroundColor(int x, int y) {
+        return gridBackgroundColor.get(y).get(x);
+    }
+
+    public void setGridBackgroundColor(int x, int y, Color color) {
+        gridBackgroundColor.get(y).set(x, color);
+    }
+
+    public Piece getLastPieceMoved() {
+        return lastMovedPiece;
     }
 }

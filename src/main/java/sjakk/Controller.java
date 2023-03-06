@@ -7,9 +7,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import sjakk.pieces.Piece;
 
@@ -18,7 +18,7 @@ public class Controller implements Initializable {
     private TextArea moves;
 
     @FXML
-    private GridPane grid;
+    private GridPane grid, backgroundBoard;
 
     @FXML
     private AnchorPane gridPane;
@@ -28,29 +28,21 @@ public class Controller implements Initializable {
 
     private ChessBoard chessboard;
 
-    private Position getGridPosition(MouseEvent event) {
-        return new Position((int) event.getX() / 50, 7 - (int) event.getY() / 50);
-    }
-
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         handleRestartGame();
 
         gridPane.setOnMousePressed(event -> {
-            chessboard.positionPressed(getGridPosition(event));
-            System.out.println(getGridPosition(event));
+            chessboard.positionPressed(new Position(event));
+            System.out.println(new Position(event));
         });
-    };
+    }
 
     @FXML
     private void handleRestartGame() {
         chessboard = new ChessBoard();
         chessboard.initializeDefaultSetup();
         drawBoard();
-    }
-
-    private void updateMoves() {
-        moves.setText(chessboard.getMoves());
     }
 
     @FXML
@@ -63,7 +55,32 @@ public class Controller implements Initializable {
             grid.add(piece.getImage(), piece.getX(), 7 - piece.getY());
         }
 
+        regenerateBackgroundBoard();
+        colorBackgrounds();
         updateMoves();
     }
 
+    private void regenerateBackgroundBoard() {
+        if (backgroundBoard.getChildren().size() != 64) {
+            backgroundBoard.getChildren().clear();
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    backgroundBoard.add(new Rectangle(50, 50), j, i);
+                }
+            }
+        }
+    }
+
+    private void colorBackgrounds() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ((Rectangle) backgroundBoard.getChildren().get((7 - i) * 8 + j))
+                        .setFill(chessboard.getGridBackgroundColor(j, i));
+            }
+        }
+    }
+
+    private void updateMoves() {
+        moves.setText(chessboard.getMoves());
+    }
 }
