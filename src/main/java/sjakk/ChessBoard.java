@@ -189,6 +189,17 @@ public class ChessBoard implements Iterable<Piece> {
         piece.addMovedCount();
     }
 
+    public boolean inCheck(PieceColor color) {
+        for (Piece piece : this) {
+            if (piece.getColor() == color && piece instanceof King) {
+                King king = (King) piece;
+                return king.inCheck();
+            }
+        }
+        return false;
+    }
+
+
     public String getMoves() {
         String movesString = "    WHITE | BLACK\n";
         for (int i = 0; i < moves.size(); i++) {

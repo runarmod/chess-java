@@ -36,6 +36,9 @@ public class Knight extends Piece {
         int[] dY = { 1, 2, 2, 1, -1, -2, -2, -1 };
         for (int i = 0; i < dX.length; i++) {
             Position to = new Position(getX() + dX[i], getY() + dY[i]);
+            if (messesUpcheck(to)) {
+                continue;
+            }
             if (validOnBoard(to))
                 legalMoves.add(to);
         }
@@ -43,4 +46,16 @@ public class Knight extends Piece {
         return legalMoves;
     }
 
+    @Override
+    protected boolean threatening(Position position) {
+        int[] dX = { 2, 1, -1, -2, -2, -1, 1, 2 };
+        int[] dY = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+        for (int i = 0; i < dX.length; i++) {
+            Position to = new Position(getX() + dX[i], getY() + dY[i]);
+            if (to.equals(position))
+                return true;
+        }
+        return false;
+    }
 }

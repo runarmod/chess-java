@@ -163,4 +163,19 @@ public abstract class Piece {
         this.imageView.setPreserveRatio(true);
     }
 
+    protected boolean messesUpcheck(Position to) {
+        if (!to.insideBoard())
+            return false;
+
+        Piece tmp = board.getPosition(to);
+        board.setPosition(to, this);
+        board.setPosition(pos, null);
+        boolean messesUp = board.inCheck(color);
+        board.setPosition(pos, this);
+        board.setPosition(to, tmp);
+        return messesUp;
+    }
+
+    protected abstract boolean threatening(Position position);
+
 }

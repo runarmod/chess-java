@@ -36,6 +36,8 @@ public class Pawn extends Piece {
         };
 
         for (Position p : testPostitions) {
+            if (messesUpcheck(p))
+                continue;
             if (isValidMove(p)) {
                 legalMoves.add(p);
             }
@@ -46,7 +48,7 @@ public class Pawn extends Piece {
 
     @Override
     public void move(Position to) {
-        if (!isValidMove(to)) {
+        if (!getLegalMoves().contains(to)) {
             throw new IllegalArgumentException("Illegal move");
         }
         if (moveIsEnPassant(to)) {
@@ -116,6 +118,14 @@ public class Pawn extends Piece {
             return false;
         }
         if (board.getLastPieceMoved() == possiblyTake && possiblyTake.getMoveCount() == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean threatening(Position position) {
+        if (Math.abs(pos.getX() - position.getX()) == 1 && pos.getY() + color.getDir() == position.getY()) {
             return true;
         }
         return false;
