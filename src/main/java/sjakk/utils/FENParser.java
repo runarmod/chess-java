@@ -1,13 +1,8 @@
 package sjakk.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import sjakk.ChessBoard;
 import sjakk.PieceColor;
@@ -15,12 +10,7 @@ import sjakk.Position;
 import sjakk.pieces.Piece;
 
 public class FENParser {
-    // private Scanner scanner;
     private File file;
-
-    // public FENParser(Scanner scanner) {
-    // this.scanner = scanner;
-    // }
 
     public FENParser() {
 
