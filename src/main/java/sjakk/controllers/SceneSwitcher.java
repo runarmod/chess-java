@@ -1,5 +1,6 @@
 package sjakk.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javafx.fxml.FXML;
@@ -24,7 +25,7 @@ public class SceneSwitcher {
             // AnchorPane.setTopAnchor(pane, 0d);
             // AnchorPane.setLeftAnchor(pane, 0d);
             // AnchorPane.setRightAnchor(pane, 0d);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error loading FXML file: " + fxmlFileName);
             System.exit(1);
             return;

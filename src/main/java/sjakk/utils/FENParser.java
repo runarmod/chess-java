@@ -2,6 +2,8 @@ package sjakk.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 import sjakk.ChessBoard;
@@ -10,22 +12,23 @@ import sjakk.Position;
 import sjakk.pieces.Piece;
 
 public class FENParser {
-    private File file;
+    private InputStream stream;
 
     public FENParser() {
 
     }
 
-    public FENParser(File file) {
-        this.file = file;
+    public FENParser(InputStream stream) {
+        this.stream = stream;
     }
 
-    public ChessBoard readFEN() throws FileNotFoundException {
-        if (file == null) {
-            return null;
+    public ChessBoard readFENFromStream() {
+        if (stream == null) {
+            throw new NullPointerException("Stream is null");
         }
-        Scanner scanner = new Scanner(file);
+        Scanner scanner = new Scanner(stream);
         ChessBoard board = readFEN(scanner.nextLine());
+        System.out.println(board);
         scanner.close();
         return board;
     }
@@ -61,8 +64,9 @@ public class FENParser {
     }
 
     public static void main(String[] args) {
-        FENParser parser = new FENParser(null);
-        ChessBoard board = parser.readFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-        System.out.println(board);
+        // FENParser parser = new FENParser(null);
+        // ChessBoard board =
+        // parser.readFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        // System.out.println(board);
     }
 }

@@ -1,7 +1,5 @@
 package sjakk.controllers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -13,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import sjakk.App;
 import sjakk.ChessBoard;
 import sjakk.Position;
 import sjakk.pieces.Piece;
@@ -46,9 +45,9 @@ public class ChessGameController extends SceneSwitcher implements Initializable 
     @FXML
     private void handleRestartGame() {
         try {
-            chessboard = new FENParser(new File(getClass().getResource("/sjakk/defaultStart.fen").getFile())).readFEN();
+            chessboard = new FENParser(App.class.getResourceAsStream("defaultStart.fen")).readFENFromStream();
             System.out.println("Read FEN from file");
-        } catch (FileNotFoundException e) {
+        } catch (NullPointerException e) {
             chessboard = new FENParser().readFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             System.out.println("Read FEN from string");
         }
