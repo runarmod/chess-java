@@ -10,7 +10,7 @@ import sjakk.controllers.TitleController;
 import java.io.IOException;
 
 public class App extends Application {
-    Scene chessScene, titleScene;
+    private Scene titleScene;
 
     public static void main(String[] args) {
         Application.launch(args);
