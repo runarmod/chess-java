@@ -1,9 +1,6 @@
 package sjakk.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.Scanner;
 
 import sjakk.ChessBoard;

@@ -62,7 +62,7 @@ public class ChessBoard implements Iterable<Piece> {
         for (int i = 0; i < 8; i++) {
             gridBackgroundColor.add(new ArrayList<Color>());
             for (int j = 0; j < 8; j++) {
-                gridBackgroundColor.get(i).add((i + j) % 2 == 0 ? Color.WHITE : Color.GRAY);
+                gridBackgroundColor.get(i).add((i + j) % 2 == 0 ? Color.GRAY : Color.WHITE);
             }
         }
     }
