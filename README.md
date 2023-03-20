@@ -1,3 +1,5 @@
+[![wakatime](https://wakatime.com/badge/user/4196dd87-492b-41f6-b435-4745a3d9200d/project/11cb9a03-2b04-4a4f-b0b5-6958e6951993.svg)](https://wakatime.com/badge/user/4196dd87-492b-41f6-b435-4745a3d9200d/project/11cb9a03-2b04-4a4f-b0b5-6958e6951993)
+
 # Skjelettprosjekt for TDT4100 prosjekt V2023
 
 Dette repoet er et skjelettprosjekt for TDT4100 prosjektet våren 2023.
