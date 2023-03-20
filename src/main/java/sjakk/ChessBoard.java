@@ -124,39 +124,39 @@ public class ChessBoard implements Iterable<Piece> {
      * Sets up the board with the default chess setup.
      * TODO: Do this using PGN or FEN.
      */
-    public void initializeDefaultSetup() {
-        for (int i = 0; i < 8; i++) {
-            new Pawn(new Position(i, 1), this, PieceColor.WHITE);
-            new Pawn(new Position(i, 6), this, PieceColor.BLACK);
-        }
+    // public void initializeDefaultSetup() {
+    // for (int i = 0; i < 8; i++) {
+    // new Pawn(new Position(i, 1), this, PieceColor.WHITE);
+    // new Pawn(new Position(i, 6), this, PieceColor.BLACK);
+    // }
 
-        new Rook(new Position(0, 0), this, PieceColor.WHITE);
-        new Rook(new Position(7, 0), this, PieceColor.WHITE);
+    // new Rook(new Position(0, 0), this, PieceColor.WHITE);
+    // new Rook(new Position(7, 0), this, PieceColor.WHITE);
 
-        new Rook(new Position(0, 7), this, PieceColor.BLACK);
-        new Rook(new Position(7, 7), this, PieceColor.BLACK);
+    // new Rook(new Position(0, 7), this, PieceColor.BLACK);
+    // new Rook(new Position(7, 7), this, PieceColor.BLACK);
 
-        new Knight(new Position(1, 0), this, PieceColor.WHITE);
-        new Knight(new Position(6, 0), this, PieceColor.WHITE);
+    // new Knight(new Position(1, 0), this, PieceColor.WHITE);
+    // new Knight(new Position(6, 0), this, PieceColor.WHITE);
 
-        new Knight(new Position(1, 7), this, PieceColor.BLACK);
-        new Knight(new Position(6, 7), this, PieceColor.BLACK);
+    // new Knight(new Position(1, 7), this, PieceColor.BLACK);
+    // new Knight(new Position(6, 7), this, PieceColor.BLACK);
 
-        new Bishop(new Position(2, 0), this, PieceColor.WHITE);
-        new Bishop(new Position(5, 0), this, PieceColor.WHITE);
+    // new Bishop(new Position(2, 0), this, PieceColor.WHITE);
+    // new Bishop(new Position(5, 0), this, PieceColor.WHITE);
 
-        new Bishop(new Position(2, 7), this, PieceColor.BLACK);
-        new Bishop(new Position(5, 7), this, PieceColor.BLACK);
+    // new Bishop(new Position(2, 7), this, PieceColor.BLACK);
+    // new Bishop(new Position(5, 7), this, PieceColor.BLACK);
 
-        new Queen(new Position(3, 0), this, PieceColor.WHITE);
+    // new Queen(new Position(3, 0), this, PieceColor.WHITE);
 
-        new Queen(new Position(3, 7), this, PieceColor.BLACK);
+    // new Queen(new Position(3, 7), this, PieceColor.BLACK);
 
-        new King(new Position(4, 0), this, PieceColor.WHITE);
+    // new King(new Position(4, 0), this, PieceColor.WHITE);
 
-        new King(new Position(4, 7), this, PieceColor.BLACK);
+    // new King(new Position(4, 7), this, PieceColor.BLACK);
 
-    }
+    // }
 
     public boolean isValidMove(Piece piece, Position position) {
         return piece.isValidMove(position);
@@ -199,7 +199,6 @@ public class ChessBoard implements Iterable<Piece> {
         return false;
     }
 
-
     public String getMoves() {
         String movesString = "    WHITE | BLACK\n";
         for (int i = 0; i < moves.size(); i++) {
@@ -230,5 +229,18 @@ public class ChessBoard implements Iterable<Piece> {
 
     public Piece getLastPieceMoved() {
         return lastMovedPiece;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessBoard [board=" + board + "]";
+    }
+
+    public void setTurn(PieceColor color) {
+        this.turn = color;
+    }
+
+    public void setLastPieceMoved(Piece piece) {
+        this.lastMovedPiece = piece;
     }
 }

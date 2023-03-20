@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="540.0" maxWidth="660.0" minHeight="540.0" minWidth="660.0" prefHeight="540.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sjakk.Controller">
+<AnchorPane fx:id="baseAnchor" maxHeight="540.0" maxWidth="660.0" minHeight="540.0" minWidth="660.0" prefHeight="540.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane layoutX="25.0" layoutY="25.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
          <children>
@@ -231,5 +231,10 @@
             </Text>
          </children>
       </AnchorPane>
+      <Button layoutX="1.0" layoutY="1.0" mnemonicParsing="false" onAction="#toTitleScreen" text="←" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <font>
+            <Font name="Consolas" size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

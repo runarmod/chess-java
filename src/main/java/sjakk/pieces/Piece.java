@@ -14,6 +14,8 @@ public abstract class Piece {
     protected ChessBoard board;
     protected PieceColor color;
     protected ImageView imageView;
+    protected String name;
+
     protected int moveCount = 0;
 
     /**
@@ -27,6 +29,7 @@ public abstract class Piece {
     public Piece(Position position, ChessBoard board, PieceColor color, String name) {
         this.pos = position;
         this.board = board;
+        this.name = name;
         if (board.getPosition(position) != this) {
             board.setPosition(position, this);
         }
@@ -34,6 +37,11 @@ public abstract class Piece {
 
         if (!board.isTest())
             cropPieceImage(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     /**
@@ -143,6 +151,21 @@ public abstract class Piece {
         moveCount++;
     }
 
+    protected boolean messesUpcheck(Position to) {
+        if (!to.insideBoard())
+            return false;
+
+        Piece tmp = board.getPosition(to);
+        board.setPosition(to, this);
+        board.setPosition(pos, null);
+        boolean messesUp = board.inCheck(color);
+        board.setPosition(pos, this);
+        board.setPosition(to, tmp);
+        return messesUp;
+    }
+
+    protected abstract boolean threatening(Position position);
+
     /**
      * Crops the image of the piece from the image of all pieces and sets it as the
      * image of this piece.
@@ -163,19 +186,40 @@ public abstract class Piece {
         this.imageView.setPreserveRatio(true);
     }
 
-    protected boolean messesUpcheck(Position to) {
-        if (!to.insideBoard())
-            return false;
+    public static Piece getPiece(char c, Position pos, ChessBoard board) {
+        PieceColor color = Character.isUpperCase(c) ? PieceColor.WHITE : PieceColor.BLACK;
 
-        Piece tmp = board.getPosition(to);
-        board.setPosition(to, this);
-        board.setPosition(pos, null);
-        boolean messesUp = board.inCheck(color);
-        board.setPosition(pos, this);
-        board.setPosition(to, tmp);
-        return messesUp;
+        Piece piece;
+
+        switch (c) {
+            case 'K':
+            case 'k':
+                piece = new King(pos, board, color);
+                break;
+            case 'Q':
+            case 'q':
+                piece = new Queen(pos, board, color);
+                break;
+            case 'R':
+            case 'r':
+                piece = new Rook(pos, board, color);
+                break;
+            case 'B':
+            case 'b':
+                piece = new Bishop(pos, board, color);
+                break;
+            case 'N':
+            case 'n':
+                piece = new Knight(pos, board, color);
+                break;
+            case 'P':
+            case 'p':
+                piece = new Pawn(pos, board, color);
+                break;
+            default:
+                piece = null;
+        }
+        return piece;
     }
-
-    protected abstract boolean threatening(Position position);
 
 }

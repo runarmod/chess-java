@@ -1,5 +1,8 @@
-package sjakk;
+package sjakk.controllers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -11,9 +14,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import sjakk.ChessBoard;
+import sjakk.Position;
 import sjakk.pieces.Piece;
+import sjakk.utils.FENParser;
 
-public class Controller implements Initializable {
+public class ChessGameController extends SceneSwitcher implements Initializable {
     @FXML
     private TextArea moves;
 
@@ -40,8 +46,13 @@ public class Controller implements Initializable {
 
     @FXML
     private void handleRestartGame() {
-        chessboard = new ChessBoard();
-        chessboard.initializeDefaultSetup();
+        try {
+            chessboard = new FENParser(new File(getClass().getResource("/sjakk/defaultStart.fen").getFile())).readFEN();
+            System.out.println("Read FEN from file");
+        } catch (FileNotFoundException e) {
+            chessboard = new FENParser().readFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            System.out.println("Read FEN from string");
+        }
         drawBoard();
     }
 
@@ -83,4 +94,10 @@ public class Controller implements Initializable {
     private void updateMoves() {
         moves.setText(chessboard.getMoves());
     }
+
+    @FXML
+    private void toTitleScreen() {
+        insertPane("TitleScreen.fxml", baseAnchor, new TitleController());
+    }
+
 }
