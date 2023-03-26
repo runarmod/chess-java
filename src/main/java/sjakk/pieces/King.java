@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import sjakk.ChessBoard;
-import sjakk.PieceColor;
+import sjakk.Player;
 import sjakk.Position;
 
 public class King extends Piece {
 
-    public King(Position position, ChessBoard board, PieceColor color) {
-        super(position, board, color, "King");
+    public King(Position position, ChessBoard board, Player owner) {
+        super(position, board, owner, "King");
     }
 
     public boolean inCheck() {
@@ -19,7 +19,7 @@ public class King extends Piece {
 
     private boolean positionIsInCheck(Position position) {
         for (Piece piece : board) {
-            if (piece.getColor() != color && piece.threatening(position)) {
+            if (piece.getOwner() != owner && piece.threatening(position)) {
                 return true;
             }
         }
@@ -45,7 +45,7 @@ public class King extends Piece {
                 }
 
                 // Can't move to a position with a piece of the same color
-                if (board.getPosition(p) != null && board.getPosition(p).getColor() == color) {
+                if (board.getPosition(p) != null && board.getPosition(p).getOwner() == owner) {
                     continue;
                 }
 

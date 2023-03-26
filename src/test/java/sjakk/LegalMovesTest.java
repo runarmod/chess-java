@@ -15,6 +15,8 @@ import sjakk.pieces.*;
 
 public class LegalMovesTest {
     private ChessBoard board;
+    private Player whitePlayer;
+    private Player blackPlayer;
 
     private void checkCollectionsEqual(Collection<Position> returnedLegal, Collection<Position> actualLegal,
             String piece) {
@@ -24,12 +26,14 @@ public class LegalMovesTest {
 
     @BeforeEach
     public void setUp() {
-        board = new ChessBoard(true);
+        whitePlayer = new Player(PieceColor.WHITE);
+        blackPlayer = new Player(PieceColor.BLACK);
+        board = new ChessBoard(true, whitePlayer, blackPlayer);
     }
 
     @Test
     public void testBishopEmptyBoard() {
-        Bishop bishop = new Bishop(new Position(5, 4), board, PieceColor.WHITE);
+        Bishop bishop = new Bishop(new Position(5, 4), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         // Diagonal down right
@@ -53,9 +57,9 @@ public class LegalMovesTest {
 
     @Test
     public void testBishopBlockingPiece() {
-        Bishop bishop = new Bishop(new Position(6, 4), board, PieceColor.WHITE);
-        Rook blockingPiece = new Rook(new Position(4, 6), board, PieceColor.WHITE);
-        Rook capturePiece = new Rook(new Position(3, 1), board, PieceColor.BLACK);
+        Bishop bishop = new Bishop(new Position(6, 4), board, whitePlayer);
+        Rook blockingPiece = new Rook(new Position(4, 6), board, whitePlayer);
+        Rook capturePiece = new Rook(new Position(3, 1), board, blackPlayer);
 
         board.setPosition(new Position(4, 6), blockingPiece);
         board.setPosition(new Position(3, 1), capturePiece);
@@ -76,7 +80,7 @@ public class LegalMovesTest {
 
     @Test
     public void testKingEmptyBoard() {
-        King king = new King(new Position(5, 4), board, PieceColor.WHITE);
+        King king = new King(new Position(5, 4), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(4, 3));
@@ -93,16 +97,15 @@ public class LegalMovesTest {
 
     @Test
     public void testKing() {
-        King king = new King(new Position(6, 5), board, PieceColor.WHITE);
-        Piece blockingPiece = new Knight(new Position(5, 6), board, PieceColor.WHITE);
-        Piece capturePiece = new Knight(new Position(6, 6), board, PieceColor.BLACK);
-        Piece threateningPiece = new Knight(new Position(4, 2), board, PieceColor.BLACK);
+        King king = new King(new Position(6, 5), board, whitePlayer);
+        Piece blockingPiece = new Knight(new Position(5, 6), board, whitePlayer);
+        Piece captureAndThreateningPiece = new Knight(new Position(6, 6), board, blackPlayer);
+        Piece threateningPiece = new Knight(new Position(4, 2), board, blackPlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(5, 5));
         actualLegal.add(new Position(6, 4));
         actualLegal.add(new Position(6, 6));
-        actualLegal.add(new Position(7, 4));
         actualLegal.add(new Position(7, 5));
         actualLegal.add(new Position(7, 6));
 
@@ -111,8 +114,8 @@ public class LegalMovesTest {
 
     @Test
     public void testKingCastling() {
-        King king = new King(new Position(5, 4), board, PieceColor.WHITE);
-        Rook rook = new Rook(new Position(8, 1), board, PieceColor.WHITE);
+        King king = new King(new Position(5, 4), board, whitePlayer);
+        Rook rook = new Rook(new Position(8, 1), board, whitePlayer);
 
         board.setPosition(new Position(8, 1), rook);
         board.setPosition(new Position(5, 4), king);
@@ -134,7 +137,7 @@ public class LegalMovesTest {
 
     @Test
     public void testKnightEmptyBoard() {
-        Knight knight = new Knight(new Position(5, 4), board, PieceColor.WHITE);
+        Knight knight = new Knight(new Position(5, 4), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(3, 3));
@@ -154,9 +157,9 @@ public class LegalMovesTest {
 
     @Test
     public void testKnightBlockingPiece() {
-        Knight knight = new Knight(new Position(6, 5), board, PieceColor.WHITE);
-        Piece blockingPiece = new Rook(new Position(5, 3), board, PieceColor.WHITE);
-        Piece capturePiece = new Rook(new Position(7, 7), board, PieceColor.BLACK);
+        Knight knight = new Knight(new Position(6, 5), board, whitePlayer);
+        Piece blockingPiece = new Rook(new Position(5, 3), board, whitePlayer);
+        Piece capturePiece = new Rook(new Position(7, 7), board, blackPlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(7, 7));
@@ -170,7 +173,7 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnFirstMove() {
-        Pawn pawn = new Pawn(new Position(4, 1), board, PieceColor.WHITE);
+        Pawn pawn = new Pawn(new Position(4, 1), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(4, 2));
@@ -181,7 +184,7 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnNotFirstMove() {
-        Pawn pawn = new Pawn(new Position(4, 2), board, PieceColor.WHITE);
+        Pawn pawn = new Pawn(new Position(4, 2), board, whitePlayer);
         pawn.move(new Position(4, 3));
 
         Collection<Position> actualLegal = new ArrayList<Position>();
@@ -192,8 +195,8 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnBlockingPieceFirstMove() {
-        Pawn pawn = new Pawn(new Position(4, 1), board, PieceColor.WHITE);
-        Piece blockingPiece = new Rook(new Position(4, 2), board, PieceColor.WHITE);
+        Pawn pawn = new Pawn(new Position(4, 1), board, whitePlayer);
+        Piece blockingPiece = new Rook(new Position(4, 2), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
 
@@ -202,8 +205,8 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnTakePiece() {
-        Pawn pawn = new Pawn(new Position(4, 3), board, PieceColor.WHITE);
-        Piece blockingPiece = new Rook(new Position(5, 4), board, PieceColor.BLACK);
+        Pawn pawn = new Pawn(new Position(4, 3), board, whitePlayer);
+        Piece blockingPiece = new Rook(new Position(5, 4), board, blackPlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(5, 4));
@@ -215,9 +218,9 @@ public class LegalMovesTest {
 
     @Test
     public void testPawnEnPassant() {
-        Pawn pawn = new Pawn(new Position(4, 1), board, PieceColor.WHITE);
-        Pawn tmp = new Pawn(new Position(0, 6), board, PieceColor.BLACK);
-        Pawn toTake = new Pawn(new Position(5, 6), board, PieceColor.BLACK);
+        Pawn pawn = new Pawn(new Position(4, 1), board, whitePlayer);
+        Pawn tmp = new Pawn(new Position(0, 6), board, blackPlayer);
+        Pawn toTake = new Pawn(new Position(5, 6), board, blackPlayer);
         pawn.move(new Position(4, 3));
         tmp.move(new Position(0, 4));
         pawn.move(new Position(4, 4));
@@ -232,7 +235,7 @@ public class LegalMovesTest {
 
     @Test
     public void testRookEmptyBoard() {
-        Rook rook = new Rook(new Position(0, 0), board, PieceColor.WHITE);
+        Rook rook = new Rook(new Position(0, 0), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 1; i < 8; i++) {
@@ -245,10 +248,10 @@ public class LegalMovesTest {
 
     @Test
     public void testRookBlockingPiece() {
-        Piece blockingPiece = new Rook(new Position(3, 4), board, PieceColor.BLACK);
+        Piece blockingPiece = new Rook(new Position(3, 4), board, blackPlayer);
         board.setPosition(new Position(3, 4), blockingPiece);
 
-        Rook rook = new Rook(new Position(4, 4), board, PieceColor.BLACK);
+        Rook rook = new Rook(new Position(4, 4), board, blackPlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 0; i < 8; i++) {
@@ -270,10 +273,10 @@ public class LegalMovesTest {
 
     @Test
     public void testRookCapturePiece() {
-        Rook captureRook = new Rook(new Position(3, 4), board, PieceColor.WHITE);
+        Rook captureRook = new Rook(new Position(3, 4), board, whitePlayer);
         board.setPosition(new Position(3, 4), captureRook);
 
-        Rook rook = new Rook(new Position(4, 4), board, PieceColor.BLACK);
+        Rook rook = new Rook(new Position(4, 4), board, blackPlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 0; i < 8; i++) {
@@ -290,7 +293,7 @@ public class LegalMovesTest {
 
     @Test
     public void testQueenEmptyBoard() {
-        Queen queen = new Queen(new Position(4, 4), board, PieceColor.WHITE);
+        Queen queen = new Queen(new Position(4, 4), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         for (int i = 0; i < 8; i++) {
@@ -317,9 +320,9 @@ public class LegalMovesTest {
 
     @Test
     public void testQueenBlockingPiece() {
-        Queen queen = new Queen(new Position(4, 4), board, PieceColor.WHITE);
-        Piece blockingPiece = new Rook(new Position(4, 6), board, PieceColor.WHITE);
-        Piece capturePiece = new Rook(new Position(2, 2), board, PieceColor.BLACK);
+        Queen queen = new Queen(new Position(4, 4), board, whitePlayer);
+        Piece blockingPiece = new Rook(new Position(4, 6), board, whitePlayer);
+        Piece capturePiece = new Rook(new Position(2, 2), board, blackPlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
 

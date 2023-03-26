@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import sjakk.ChessBoard;
 import sjakk.PieceColor;
+import sjakk.Player;
 import sjakk.Position;
 import sjakk.pieces.Piece;
 
@@ -31,7 +32,9 @@ public class FENParser {
     }
 
     public ChessBoard readFEN(String input) {
-        ChessBoard board = new ChessBoard();
+        Player white = new Player(PieceColor.WHITE);
+        Player black = new Player(PieceColor.BLACK);
+        ChessBoard board = new ChessBoard(white, black);
         String[] data = input.split(" ");
         String[] rows = data[0].split("/");
 
@@ -40,11 +43,12 @@ public class FENParser {
 
             int j = 0;
             while (j < 8) {
-                char c = row.charAt(j);
-                if (Character.isDigit(c)) {
-                    j += Character.getNumericValue(c);
+                char pieceCharacter = row.charAt(j);
+                if (Character.isDigit(pieceCharacter)) {
+                    j += Character.getNumericValue(pieceCharacter);
                 } else {
-                    Piece.getPiece(c, new Position(j, 7 - i), board);
+                    Player player = Character.isUpperCase(pieceCharacter) ? white : black;
+                    Piece.placePiece(player, new Position(j, 7 - i), board, pieceCharacter);
                     j++;
                 }
             }

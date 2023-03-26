@@ -1,20 +1,22 @@
 # TODO
 
 - [x] Add knight
-- [ ] Add king
+- [x] Add king
 - [x] Create test for queen
 - [x] Create test for knight
-- [ ] Create test for king
-- [ ] Fix en passant
+- [x] Create test for king
+- [x] Fix en passant
+- [ ] Fix mate
 - [ ] Fix castling
+- [ ] Bruk FEN i tests
 
 
 ## Features
 
-- Title
-- Chessboard
-- Timer
-- Import/export position
-- Restart game
-- Liste med trekk
-- Tatte brikker
+- [x] Title
+- [x] Chessboard
+- [ ] Timer
+- [ ] Import/export position
+- [x] Restart game
+- [x] Liste med trekk
+- [ ] Tatte brikker

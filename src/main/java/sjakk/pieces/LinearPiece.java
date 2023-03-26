@@ -5,15 +5,15 @@ import java.util.Collection;
 import java.util.List;
 
 import sjakk.ChessBoard;
-import sjakk.PieceColor;
+import sjakk.Player;
 import sjakk.Position;
 
 public abstract class LinearPiece extends Piece {
 
     private Collection<Position> legalDirections = new ArrayList<Position>();
 
-    public LinearPiece(Position position, ChessBoard board, PieceColor color, String name) {
-        super(position, board, color, name);
+    public LinearPiece(Position position, ChessBoard board, Player owner, String name) {
+        super(position, board, owner, name);
     }
 
     @Override
@@ -21,21 +21,28 @@ public abstract class LinearPiece extends Piece {
         Collection<Position> legalMoves = new ArrayList<Position>();
 
         for (Position tmpDir : legalDirections) {
-
             Position currentPosition = new Position(pos).add(tmpDir);
+
             while (currentPosition.insideBoard()) {
                 if (board.getPosition(currentPosition) != null
-                        && board.getPosition(currentPosition).getColor() == color) {
+                        && board.getPosition(currentPosition).getOwner() == this.owner) {
                     break;
                 }
+
                 if (messesUpcheck(currentPosition)) {
+                    // If a move would put the king in check, it is not a legal move
+                    // If the position had a piece on it, we can't check further
+                    if (board.getPosition(currentPosition) != null) {
+                        break;
+                    }
                     currentPosition = currentPosition.add(tmpDir);
                     continue;
                 }
+                
                 if (board.getPosition(currentPosition) == null) {
                     legalMoves.add(currentPosition);
                 } else {
-                    if (board.getPosition(currentPosition).getColor() != color) {
+                    if (board.getPosition(currentPosition).getOwner() != this.owner) {
                         legalMoves.add(currentPosition);
                     }
                     break;

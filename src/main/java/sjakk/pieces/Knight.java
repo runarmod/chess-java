@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import sjakk.ChessBoard;
-import sjakk.PieceColor;
+import sjakk.Player;
 import sjakk.Position;
 
 public class Knight extends Piece {
 
-    public Knight(Position position, ChessBoard board, PieceColor color) {
-        super(position, board, color, "Knight");
+    public Knight(Position position, ChessBoard board, Player owner) {
+        super(position, board, owner, "Knight");
     }
 
     @Override
@@ -23,7 +23,7 @@ public class Knight extends Piece {
             return false;
         if (board.getPosition(to) == null)
             return true;
-        if (board.getPosition(to).getColor() != color)
+        if (board.getPosition(to).getOwner() != owner)
             return true;
         return false;
     }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import sjakk.ChessBoard;
-import sjakk.PieceColor;
+import sjakk.Player;
 import sjakk.Position;
 
 public class Pawn extends Piece {
@@ -12,8 +12,8 @@ public class Pawn extends Piece {
     private boolean hasMoved = false;
     private boolean hasMadeAnPassant = false;
 
-    public Pawn(Position position, ChessBoard board, PieceColor color) {
-        super(position, board, color, "Pawn");
+    public Pawn(Position position, ChessBoard board, Player owner) {
+        super(position, board, owner, "Pawn");
     }
 
     @Override
@@ -29,10 +29,10 @@ public class Pawn extends Piece {
         Collection<Position> legalMoves = new ArrayList<>();
 
         Position[] testPostitions = {
-                new Position(pos.getX(), pos.getY() + color.getDir()), // 1 forward
-                new Position(pos.getX(), pos.getY() + 2 * color.getDir()), // 2 forward
-                new Position(pos.getX() + 1, pos.getY() + color.getDir()), // 1 forward, 1 right
-                new Position(pos.getX() - 1, pos.getY() + color.getDir()) // 1 forward, 1 left
+                new Position(pos.getX(), pos.getY() + owner.getDir()), // 1 forward
+                new Position(pos.getX(), pos.getY() + 2 * owner.getDir()), // 2 forward
+                new Position(pos.getX() + 1, pos.getY() + owner.getDir()), // 1 forward, 1 right
+                new Position(pos.getX() - 1, pos.getY() + owner.getDir()) // 1 forward, 1 left
         };
 
         for (Position p : testPostitions) {
@@ -74,11 +74,11 @@ public class Pawn extends Piece {
         if (board.getPosition(to) != null) {
             return false;
         }
-        if (pos.getY() + color.getDir() == to.getY()) {
+        if (pos.getY() + owner.getDir() == to.getY()) {
             return true;
         }
-        if (!hasMoved && pos.getY() + 2 * color.getDir() == to.getY()
-                && board.getPosition(new Position(getX(), getY() + color.getDir())) == null) {
+        if (!hasMoved && pos.getY() + 2 * owner.getDir() == to.getY()
+                && board.getPosition(new Position(getX(), getY() + owner.getDir())) == null) {
             return true;
         }
         return false;
@@ -88,7 +88,7 @@ public class Pawn extends Piece {
         if (Math.abs(pos.getX() - to.getX()) != 1) {
             return false;
         }
-        if (pos.getY() + color.getDir() != to.getY()) {
+        if (pos.getY() + owner.getDir() != to.getY()) {
             return false;
         }
         if (moveIsEnPassant(to)) {
@@ -97,7 +97,7 @@ public class Pawn extends Piece {
         if (board.getPosition(to) == null) {
             return false;
         }
-        if (board.getPosition(to).getColor() == color) {
+        if (board.getPosition(to).getOwner() == owner) {
             return false;
         }
         return true;
@@ -107,13 +107,13 @@ public class Pawn extends Piece {
         if (Math.abs(pos.getX() - to.getX()) != 1) {
             return false;
         }
-        if (pos.getY() + color.getDir() != to.getY()) {
+        if (pos.getY() + owner.getDir() != to.getY()) {
             return false;
         }
         if (board.getPosition(to) != null) {
             return false;
         }
-        Piece possiblyTake = board.getPosition(new Position(to.getX(), to.getY() - color.getDir()));
+        Piece possiblyTake = board.getPosition(new Position(to.getX(), to.getY() - owner.getDir()));
         if (!(possiblyTake instanceof Pawn)) {
             return false;
         }
@@ -125,7 +125,7 @@ public class Pawn extends Piece {
 
     @Override
     protected boolean threatening(Position position) {
-        if (Math.abs(pos.getX() - position.getX()) == 1 && pos.getY() + color.getDir() == position.getY()) {
+        if (Math.abs(pos.getX() - position.getX()) == 1 && pos.getY() + owner.getDir() == position.getY()) {
             return true;
         }
         return false;

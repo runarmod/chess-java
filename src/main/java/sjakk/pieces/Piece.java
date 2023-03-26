@@ -6,13 +6,13 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import sjakk.ChessBoard;
-import sjakk.PieceColor;
+import sjakk.Player;
 import sjakk.Position;
 
 public abstract class Piece {
     protected Position pos;
     protected ChessBoard board;
-    protected PieceColor color;
+    protected Player owner;
     protected ImageView imageView;
     protected String name;
 
@@ -26,14 +26,14 @@ public abstract class Piece {
      * @param board    the board the piece is on
      * @param color    the color of the piece
      */
-    public Piece(Position position, ChessBoard board, PieceColor color, String name) {
+    public Piece(Position position, ChessBoard board, Player owner, String name) {
         this.pos = position;
         this.board = board;
         this.name = name;
         if (board.getPosition(position) != this) {
             board.setPosition(position, this);
         }
-        this.color = color;
+        this.owner = owner;
 
         if (!board.isTest())
             cropPieceImage(name);
@@ -91,10 +91,10 @@ public abstract class Piece {
     /**
      * Returns the color of the piece.
      * 
-     * @return the color of the piece
+     * @return the color of the piece (1 if white, 0 if black)
      */
-    public PieceColor getColor() {
-        return color;
+    public boolean isWhite() {
+        return owner.isWhite();
     }
 
     /**
@@ -158,7 +158,7 @@ public abstract class Piece {
         Piece tmp = board.getPosition(to);
         board.setPosition(to, this);
         board.setPosition(pos, null);
-        boolean messesUp = board.inCheck(color);
+        boolean messesUp = board.inCheck(owner);
         board.setPosition(pos, this);
         board.setPosition(to, tmp);
         return messesUp;
@@ -175,7 +175,7 @@ public abstract class Piece {
     private void cropPieceImage(String pieceType) {
         this.imageView = new ImageView(ChessBoard.getAllPiecesImg());
 
-        int imgY = (color == PieceColor.WHITE ? 0 : 1);
+        int imgY = (owner.isWhite() ? 0 : 1);
         int coloumnIndex = ChessBoard.getPieceImageIndex(pieceType);
         final int size = 50;
 
@@ -186,40 +186,42 @@ public abstract class Piece {
         this.imageView.setPreserveRatio(true);
     }
 
-    public static Piece getPiece(char c, Position pos, ChessBoard board) {
-        PieceColor color = Character.isUpperCase(c) ? PieceColor.WHITE : PieceColor.BLACK;
-
+    public static Piece placePiece(Player player, Position pos, ChessBoard board, char c) {
         Piece piece;
 
         switch (c) {
             case 'K':
             case 'k':
-                piece = new King(pos, board, color);
+                piece = new King(pos, board, player);
                 break;
             case 'Q':
             case 'q':
-                piece = new Queen(pos, board, color);
+                piece = new Queen(pos, board, player);
                 break;
             case 'R':
             case 'r':
-                piece = new Rook(pos, board, color);
+                piece = new Rook(pos, board, player);
                 break;
             case 'B':
             case 'b':
-                piece = new Bishop(pos, board, color);
+                piece = new Bishop(pos, board, player);
                 break;
             case 'N':
             case 'n':
-                piece = new Knight(pos, board, color);
+                piece = new Knight(pos, board, player);
                 break;
             case 'P':
             case 'p':
-                piece = new Pawn(pos, board, color);
+                piece = new Pawn(pos, board, player);
                 break;
             default:
                 piece = null;
         }
         return piece;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
 }

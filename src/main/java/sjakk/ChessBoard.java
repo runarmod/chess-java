@@ -10,7 +10,8 @@ import sjakk.pieces.*;
 
 public class ChessBoard implements Iterable<Piece> {
     private static Image allPiecesImg;
-    private static Map<String, Integer> imgColIdx = Map.of("King", 0, "Queen", 1, "Bishop", 2, "Knight", 3, "Rook", 4,
+    private final static Map<String, Integer> imgColIdx = Map.of("King", 0, "Queen", 1, "Bishop", 2, "Knight", 3,
+            "Rook", 4,
             "Pawn", 5);
 
     public static Image getAllPiecesImg() {
@@ -22,24 +23,20 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     private ArrayList<ArrayList<Color>> gridBackgroundColor;
-
     private ArrayList<ArrayList<Piece>> board;
-
     private ArrayList<String> moves = new ArrayList<String>();
-
     private Piece selectedPiece;
-
-    private PieceColor turn = PieceColor.WHITE;
-
     private boolean test = false;
-
     private Piece lastMovedPiece;
+    private Player white;
+    private Player black;
+    private Player turn;
 
-    public ChessBoard() {
-        this(false);
+    public ChessBoard(Player white, Player black) {
+        this(false, white, black);
     }
 
-    public ChessBoard(boolean test) {
+    public ChessBoard(boolean test, Player white, Player black) {
         this.test = test;
 
         board = new ArrayList<ArrayList<Piece>>();
@@ -49,6 +46,15 @@ public class ChessBoard implements Iterable<Piece> {
                 board.get(i).add(null);
             }
         }
+        this.white = white;
+        this.black = black;
+
+        if (white == null)
+            this.white = new Player(PieceColor.WHITE);
+        if (black == null)
+            this.black = new Player(PieceColor.BLACK);
+
+        turn = white;
 
         resetGridBackgroundMatrix();
 
@@ -94,7 +100,7 @@ public class ChessBoard implements Iterable<Piece> {
         if (selectedPiece == null) {
             selectedPiece = getPosition(position);
             // If the selected piece is not the correct color, deselect it.
-            if (selectedPiece != null && selectedPiece.getColor() != turn) {
+            if (selectedPiece != null && selectedPiece.getOwner() != turn) {
                 selectedPiece = null;
                 return;
             }
@@ -105,7 +111,7 @@ public class ChessBoard implements Iterable<Piece> {
             return;
         }
 
-        if (turn != selectedPiece.getColor())
+        if (turn != selectedPiece.getOwner())
             return;
 
         try {
@@ -117,7 +123,7 @@ public class ChessBoard implements Iterable<Piece> {
         }
 
         selectedPiece = null;
-        turn = (turn == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
+        turn = (turn == white ? black : white);
     }
 
     /**
@@ -181,7 +187,7 @@ public class ChessBoard implements Iterable<Piece> {
         piece.setPos(to);
         if (piece instanceof Pawn && ((Pawn) piece).getHasMadeAnPassant()) {
             System.out.println("Pawn has made an passant");
-            Position pos = new Position(piece.getX(), piece.getY() - piece.getColor().getDir());
+            Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
             setPosition(pos, null);
         }
 
@@ -189,9 +195,9 @@ public class ChessBoard implements Iterable<Piece> {
         piece.addMovedCount();
     }
 
-    public boolean inCheck(PieceColor color) {
+    public boolean inCheck(Player player) {
         for (Piece piece : this) {
-            if (piece.getColor() == color && piece instanceof King) {
+            if (piece.getOwner() == player && piece instanceof King) {
                 King king = (King) piece;
                 return king.inCheck();
             }
@@ -237,7 +243,7 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     public void setTurn(PieceColor color) {
-        this.turn = color;
+        this.turn = (color == PieceColor.WHITE ? white : black);
     }
 
     public void setLastPieceMoved(Piece piece) {

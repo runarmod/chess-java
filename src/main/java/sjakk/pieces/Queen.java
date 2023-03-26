@@ -3,13 +3,13 @@ package sjakk.pieces;
 import java.util.List;
 
 import sjakk.ChessBoard;
-import sjakk.PieceColor;
+import sjakk.Player;
 import sjakk.Position;
 
 public class Queen extends LinearPiece {
 
-    public Queen(Position position, ChessBoard board, PieceColor color) {
-        super(position, board, color, "Queen");
+    public Queen(Position position, ChessBoard board, Player owner) {
+        super(position, board, owner, "Queen");
 
         super.setDirections(List.of(
                 new Position(0, 1), // UP
