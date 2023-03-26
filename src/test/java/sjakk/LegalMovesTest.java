@@ -75,6 +75,64 @@ public class LegalMovesTest {
     }
 
     @Test
+    public void testKingEmptyBoard() {
+        King king = new King(new Position(5, 4), board, PieceColor.WHITE);
+
+        Collection<Position> actualLegal = new ArrayList<Position>();
+        actualLegal.add(new Position(4, 3));
+        actualLegal.add(new Position(4, 4));
+        actualLegal.add(new Position(4, 5));
+        actualLegal.add(new Position(5, 3));
+        actualLegal.add(new Position(5, 5));
+        actualLegal.add(new Position(6, 3));
+        actualLegal.add(new Position(6, 4));
+        actualLegal.add(new Position(6, 5));
+
+        checkCollectionsEqual(king.getLegalMoves(), actualLegal, "King");
+    }
+
+    @Test
+    public void testKing() {
+        King king = new King(new Position(6, 5), board, PieceColor.WHITE);
+        Piece blockingPiece = new Knight(new Position(5, 6), board, PieceColor.WHITE);
+        Piece capturePiece = new Knight(new Position(6, 6), board, PieceColor.BLACK);
+        Piece threateningPiece = new Knight(new Position(4, 2), board, PieceColor.BLACK);
+
+        Collection<Position> actualLegal = new ArrayList<Position>();
+        actualLegal.add(new Position(5, 5));
+        actualLegal.add(new Position(6, 4));
+        actualLegal.add(new Position(6, 6));
+        actualLegal.add(new Position(7, 4));
+        actualLegal.add(new Position(7, 5));
+        actualLegal.add(new Position(7, 6));
+
+        checkCollectionsEqual(king.getLegalMoves(), actualLegal, "King");
+    }
+
+    @Test
+    public void testKingCastling() {
+        King king = new King(new Position(5, 4), board, PieceColor.WHITE);
+        Rook rook = new Rook(new Position(8, 1), board, PieceColor.WHITE);
+
+        board.setPosition(new Position(8, 1), rook);
+        board.setPosition(new Position(5, 4), king);
+
+        Collection<Position> actualLegal = new ArrayList<Position>();
+        actualLegal.add(new Position(4, 3));
+        actualLegal.add(new Position(4, 4));
+        actualLegal.add(new Position(4, 5));
+        actualLegal.add(new Position(5, 3));
+        actualLegal.add(new Position(5, 5));
+        actualLegal.add(new Position(6, 3));
+        actualLegal.add(new Position(6, 4));
+        actualLegal.add(new Position(6, 5));
+        actualLegal.add(new Position(7, 4));
+        actualLegal.add(new Position(8, 4));
+
+        checkCollectionsEqual(king.getLegalMoves(), actualLegal, "King");
+    }
+
+    @Test
     public void testKnightEmptyBoard() {
         Knight knight = new Knight(new Position(5, 4), board, PieceColor.WHITE);
 

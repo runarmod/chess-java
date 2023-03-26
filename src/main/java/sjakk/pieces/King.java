@@ -39,9 +39,12 @@ public class King extends Piece {
                 if (positionIsInCheck(p)) {
                     continue;
                 }
+                // Has to be inside board
                 if (!p.insideBoard()) {
                     continue;
                 }
+
+                // Can't move to a position with a piece of the same color
                 if (board.getPosition(p) != null && board.getPosition(p).getColor() == color) {
                     continue;
                 }

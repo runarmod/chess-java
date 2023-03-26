@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 
-public class SceneSwitcher {
+public abstract class SceneSwitcher {
     @FXML
     protected AnchorPane baseAnchor;
 
@@ -19,12 +19,9 @@ public class SceneSwitcher {
 
             FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
             fxmlLoader.setController(controller);
+
             Parent pane = fxmlLoader.load();
             parent.getChildren().add(pane);
-            // AnchorPane.setBottomAnchor(pane, 0d);
-            // AnchorPane.setTopAnchor(pane, 0d);
-            // AnchorPane.setLeftAnchor(pane, 0d);
-            // AnchorPane.setRightAnchor(pane, 0d);
         } catch (IOException e) {
             System.out.println("Error loading FXML file: " + fxmlFileName);
             System.exit(1);
