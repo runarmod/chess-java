@@ -52,6 +52,14 @@ public abstract class Piece {
     public abstract Collection<Position> getLegalMoves();
 
     /**
+     * Returns whether or not the piece is threatening the given position.
+     * 
+     * @param position the position
+     * @return {@code true} if the piece is threatening the given position
+     */
+    protected abstract boolean threatening(Position position);
+
+    /**
      * Gets the image of the piece.
      * 
      * @return the image of the piece
@@ -163,8 +171,6 @@ public abstract class Piece {
         board.setPosition(to, tmp);
         return messesUp;
     }
-
-    protected abstract boolean threatening(Position position);
 
     /**
      * Crops the image of the piece from the image of all pieces and sets it as the
