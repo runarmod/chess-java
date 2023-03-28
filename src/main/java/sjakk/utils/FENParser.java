@@ -54,9 +54,27 @@ public class FENParser {
             }
         }
 
+        // Starting player
         board.setTurn(data[1].equals("w") ? PieceColor.WHITE : PieceColor.BLACK);
 
-        // TODO: data[2] castling rights
+        // Castling rights
+        board.disableCastling();
+        for (char c : data[2].toCharArray()) {
+            switch (c) {
+                case 'K':
+                    board.setWhiteKingSideCastle(true);
+                    break;
+                case 'Q':
+                    board.setWhiteQueenSideCastle(true);
+                    break;
+                case 'k':
+                    board.setBlackKingSideCastle(true);
+                    break;
+                case 'q':
+                    board.setBlackQueenSideCastle(true);
+                    break;
+            }
+        }
 
         // board.setLastPieceMoved(data[3].equals("-") ? null :
         // Piece.getPiece(data[3].charAt(0), new Position(0, 0), board));

@@ -63,7 +63,7 @@ public class Pawn extends Piece {
         this.hasMadeAnPassant = hasMadeAnPassant;
     }
 
-    public boolean getHasMadeAnPassant() {
+    public boolean getHasMadeEnPassant() {
         return hasMadeAnPassant;
     }
 

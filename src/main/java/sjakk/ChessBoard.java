@@ -126,44 +126,6 @@ public class ChessBoard implements Iterable<Piece> {
         turn = (turn == white ? black : white);
     }
 
-    /**
-     * Sets up the board with the default chess setup.
-     * TODO: Do this using PGN or FEN.
-     */
-    // public void initializeDefaultSetup() {
-    // for (int i = 0; i < 8; i++) {
-    // new Pawn(new Position(i, 1), this, PieceColor.WHITE);
-    // new Pawn(new Position(i, 6), this, PieceColor.BLACK);
-    // }
-
-    // new Rook(new Position(0, 0), this, PieceColor.WHITE);
-    // new Rook(new Position(7, 0), this, PieceColor.WHITE);
-
-    // new Rook(new Position(0, 7), this, PieceColor.BLACK);
-    // new Rook(new Position(7, 7), this, PieceColor.BLACK);
-
-    // new Knight(new Position(1, 0), this, PieceColor.WHITE);
-    // new Knight(new Position(6, 0), this, PieceColor.WHITE);
-
-    // new Knight(new Position(1, 7), this, PieceColor.BLACK);
-    // new Knight(new Position(6, 7), this, PieceColor.BLACK);
-
-    // new Bishop(new Position(2, 0), this, PieceColor.WHITE);
-    // new Bishop(new Position(5, 0), this, PieceColor.WHITE);
-
-    // new Bishop(new Position(2, 7), this, PieceColor.BLACK);
-    // new Bishop(new Position(5, 7), this, PieceColor.BLACK);
-
-    // new Queen(new Position(3, 0), this, PieceColor.WHITE);
-
-    // new Queen(new Position(3, 7), this, PieceColor.BLACK);
-
-    // new King(new Position(4, 0), this, PieceColor.WHITE);
-
-    // new King(new Position(4, 7), this, PieceColor.BLACK);
-
-    // }
-
     public boolean isValidMove(Piece piece, Position position) {
         return piece.isValidMove(position);
     }
@@ -180,21 +142,75 @@ public class ChessBoard implements Iterable<Piece> {
         board.get(position.getY()).set(position.getX(), piece);
     }
 
-    public void move(Piece piece, Position to) {
-        moves.add(piece.getPos().toString() + to.toString());
-        setPosition(piece.getPos(), null);
-        setPosition(to, piece);
-        piece.setPos(to);
-        if (piece instanceof Pawn && ((Pawn) piece).getHasMadeAnPassant()) {
+    /**
+     * Disables castling for the player if the king or rook has moved. If king
+     * moves, both sides are disabled. If rook moves, only the side the rook started
+     * on is disabled.
+     * 
+     * @param piece       The piece that moved.
+     * @param originalPos The position the piece moved from.
+     */
+    private void handleCastlingDisabling(Piece piece, Position originalPos) {
+        if (piece instanceof King) {
+            piece.getOwner().disableCastling();
+            return;
+        }
+        if (!(piece instanceof Rook))
+            return;
+
+        if (piece.getMoveCount() != 0) {
+            return;
+        }
+
+        if (piece.getX() == 7) {
+            piece.getOwner().setCastlingKingSide(false);
+        } else if (piece.getX() == 0) {
+            piece.getOwner().setCastlingQueenSide(false);
+        }
+    }
+
+    /**
+     * If the piece is a pawn that has made an en passant, the pawn that was
+     * captured is removed from the board.
+     * 
+     * @param piece The piece that moved.
+     */
+    private void handleEnPassantMove(Piece piece) {
+        if (piece instanceof Pawn && ((Pawn) piece).getHasMadeEnPassant()) {
             System.out.println("Pawn has made an passant");
             Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
             setPosition(pos, null);
         }
+    }
+
+    /**
+     * Moves a piece to a new position. Updates the information on the board and for
+     * the pieces.
+     * 
+     * @param piece The piece to move.
+     * @param to    The position to move the piece to.
+     */
+    public void move(Piece piece, Position to) {
+        Position originalPos = piece.getPos();
+
+        moves.add(piece.getPos().toString() + to.toString());
+        setPosition(piece.getPos(), null);
+        setPosition(to, piece);
+        piece.setPos(to);
+
+        handleCastlingDisabling(piece, originalPos);
+        handleEnPassantMove(piece);
 
         lastMovedPiece = piece;
         piece.addMovedCount();
     }
 
+    /**
+     * Checks if the player is in check.
+     * 
+     * @param player The player to check.
+     * @return {@code true} if the player is in check, {@code false} otherwise.
+     */
     public boolean inCheck(Player player) {
         for (Piece piece : this) {
             if (piece.getOwner() == player && piece instanceof King) {
@@ -205,8 +221,12 @@ public class ChessBoard implements Iterable<Piece> {
         return false;
     }
 
+    /**
+     * Gets the moves made in the game in string format (example {@code "e2e4
+     * e7e5\n d2d3"}).
+     */
     public String getMoves() {
-        String movesString = "    WHITE | BLACK\n";
+        String movesString = "";
         for (int i = 0; i < moves.size(); i++) {
             if (i % 2 == 0) {
                 int moveNr = (i / 2 + 1);
@@ -248,5 +268,32 @@ public class ChessBoard implements Iterable<Piece> {
 
     public void setLastPieceMoved(Piece piece) {
         this.lastMovedPiece = piece;
+    }
+
+    public void disableCastling() {
+        white.disableCastling();
+        black.disableCastling();
+    }
+
+    public void setWhiteKingSideCastle(boolean b) {
+        white.setCastlingKingSide(b);
+    }
+
+    public void setWhiteQueenSideCastle(boolean b) {
+        white.setCastlingQueenSide(b);
+    }
+
+    public void setBlackKingSideCastle(boolean b) {
+        black.setCastlingKingSide(b);
+    }
+
+    public void setBlackQueenSideCastle(boolean b) {
+        black.setCastlingQueenSide(b);
+    }
+
+    public String getCastlingRights() {
+        String out = "White: " + white.getCastlingRights();
+        out += "\nBlack: " + black.getCastlingRights();
+        return out;
     }
 }

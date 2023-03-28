@@ -10,6 +10,8 @@ public class Player {
     private float time = 0.0f;
     private boolean hasTurn = false;
     private int dir;
+    private boolean canCastleKingSide = true;
+    private boolean canCastleQueenSide = true;
 
     public Player(PieceColor white) {
         switch (white) {
@@ -60,5 +62,37 @@ public class Player {
 
     public boolean isWhite() {
         return color;
+    }
+
+    public boolean canCastleKingSide() {
+        return canCastleKingSide;
+    }
+
+    public boolean canCastleQueenSide() {
+        return canCastleQueenSide;
+    }
+
+    public void setCastlingKingSide(boolean value) {
+        this.canCastleKingSide = value;
+    }
+
+    public void setCastlingQueenSide(boolean value) {
+        this.canCastleQueenSide = value;
+    }
+
+    public void disableCastling() {
+        setCastlingKingSide(false);
+        setCastlingQueenSide(false);
+    }
+
+    public String getCastlingRights() {
+        String rights = "";
+        if (canCastleKingSide) {
+            rights += "K";
+        }
+        if (canCastleQueenSide) {
+            rights += "Q";
+        }
+        return rights;
     }
 }

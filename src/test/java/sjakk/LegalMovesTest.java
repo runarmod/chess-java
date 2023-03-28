@@ -1,6 +1,6 @@
 package sjakk;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -81,6 +81,7 @@ public class LegalMovesTest {
     @Test
     public void testKingEmptyBoard() {
         King king = new King(new Position(5, 4), board, whitePlayer);
+        board.disableCastling();
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(4, 3));
@@ -114,23 +115,41 @@ public class LegalMovesTest {
 
     @Test
     public void testKingCastling() {
-        King king = new King(new Position(5, 4), board, whitePlayer);
-        Rook rook = new Rook(new Position(8, 1), board, whitePlayer);
-
-        board.setPosition(new Position(8, 1), rook);
-        board.setPosition(new Position(5, 4), king);
+        King king = new King(new Position(4, 0), board, whitePlayer);
+        Rook rookQueenSide = new Rook(new Position(0, 0), board, whitePlayer);
+        Rook rookKingSide = new Rook(new Position(7, 0), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
-        actualLegal.add(new Position(4, 3));
-        actualLegal.add(new Position(4, 4));
-        actualLegal.add(new Position(4, 5));
-        actualLegal.add(new Position(5, 3));
-        actualLegal.add(new Position(5, 5));
-        actualLegal.add(new Position(6, 3));
-        actualLegal.add(new Position(6, 4));
-        actualLegal.add(new Position(6, 5));
-        actualLegal.add(new Position(7, 4));
-        actualLegal.add(new Position(8, 4));
+        actualLegal.add(new Position(2, 0));
+        actualLegal.add(new Position(3, 0));
+        actualLegal.add(new Position(5, 0));
+        actualLegal.add(new Position(6, 0));
+
+        actualLegal.add(new Position(3, 1));
+        actualLegal.add(new Position(4, 1));
+        actualLegal.add(new Position(5, 1));
+
+        checkCollectionsEqual(king.getLegalMoves(), actualLegal, "King");
+        king.move(new Position(2, 0));
+
+        assertEquals(board.getPosition(new Position(0, 0)), null);
+        assertEquals(board.getPosition(new Position(3, 0)), rookQueenSide);
+    }
+
+    @Test
+    public void testKingCastlingPassThroughCheck() {
+        King king = new King(new Position(4, 0), board, whitePlayer);
+        Rook rookKingSide = new Rook(new Position(7, 0), board, whitePlayer);
+        Rook rookQueenSide = new Rook(new Position(0, 0), board, whitePlayer);
+
+        Rook threateningRook = new Rook(new Position(3, 7), board, blackPlayer);
+
+        Collection<Position> actualLegal = new ArrayList<Position>();
+        actualLegal.add(new Position(5, 0));
+        actualLegal.add(new Position(6, 0));
+
+        actualLegal.add(new Position(4, 1));
+        actualLegal.add(new Position(5, 1));
 
         checkCollectionsEqual(king.getLegalMoves(), actualLegal, "King");
     }

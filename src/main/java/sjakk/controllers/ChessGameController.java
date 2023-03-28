@@ -90,7 +90,8 @@ public class ChessGameController extends SceneSwitcher implements Initializable 
     }
 
     private void updateMoves() {
-        moves.setText(chessboard.getMoves());
+        moves.setText("    WHITE | BLACK\n" + chessboard.getMoves());
+        System.out.println(chessboard.getCastlingRights());
     }
 
     @FXML
