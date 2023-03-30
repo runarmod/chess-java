@@ -8,16 +8,33 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import sjakk.pieces.*;
 
+/**
+ * This class represents the chess board. It contains a 2D array of pieces, and
+ * have all sorts methods to use.
+ * 
+ * @author Runar Saur Modahl
+ * @version 1.0
+ * @see Piece
+ * @see Player
+ */
 public class ChessBoard implements Iterable<Piece> {
     private static Image allPiecesImg;
     private final static Map<String, Integer> imgColIdx = Map.of("King", 0, "Queen", 1, "Bishop", 2, "Knight", 3,
             "Rook", 4,
             "Pawn", 5);
 
+    /**
+     * Get the image containing all the pieces.
+     * 
+     * @return the image containing all the pieces
+     */
     public static Image getAllPiecesImg() {
         return allPiecesImg;
     }
 
+    /**
+     * Get the coloumn-index of the image containing all the pieces.
+     */
     public static int getPieceImageIndex(String pieceType) {
         return imgColIdx.get(pieceType);
     }
