@@ -84,7 +84,6 @@ public class King extends Piece {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -166,12 +165,13 @@ public class King extends Piece {
         }
 
         // Castling
+        int y = pos.getY();
         if (to.getX() == pos.getX() - 2) {
-            // Casteling queen side
-            board.move(board.getPosition(new Position(0, pos.getY())), new Position(3, pos.getY()));
+            // Castling queen side
+            board.move(board.getPosition(new Position(0, y)), new Position(3, y));
         } else if (to.getX() == pos.getX() + 2) {
-            // Casteling king side
-            board.move(board.getPosition(new Position(7, pos.getY())), new Position(5, pos.getY()));
+            // Castling king side
+            board.move(board.getPosition(new Position(7, y)), new Position(5, y));
         }
 
         board.move(this, to);

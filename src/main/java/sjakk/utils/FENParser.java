@@ -41,16 +41,18 @@ public class FENParser {
         for (int i = 0; i < 8; i++) {
             String row = rows[i];
 
-            int j = 0;
-            while (j < 8) {
-                char pieceCharacter = row.charAt(j);
+            int stringIndex = 0;
+            int boardIndex = 0;
+            while (boardIndex < 8) {
+                char pieceCharacter = row.charAt(stringIndex);
                 if (Character.isDigit(pieceCharacter)) {
-                    j += Character.getNumericValue(pieceCharacter);
+                    boardIndex += Character.getNumericValue(pieceCharacter);
                 } else {
                     Player player = Character.isUpperCase(pieceCharacter) ? white : black;
-                    Piece.placePiece(player, new Position(j, 7 - i), board, pieceCharacter);
-                    j++;
+                    Piece.placePiece(player, new Position(boardIndex, 7 - i), board, pieceCharacter);
+                    boardIndex++;
                 }
+                stringIndex++;
             }
         }
 

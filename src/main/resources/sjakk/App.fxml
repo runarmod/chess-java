@@ -15,7 +15,7 @@
    <children>
       <AnchorPane layoutX="25.0" layoutY="25.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
          <children>
-            <AnchorPane fx:id="gridPane" onMouseReleased="#drawBoard" prefHeight="400.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+            <AnchorPane onMousePressed="#handleGridPaneClicked" onMouseReleased="#drawBoard" prefHeight="400.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                <children>
                   <GridPane fx:id="backgroundBoard" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columnConstraints>

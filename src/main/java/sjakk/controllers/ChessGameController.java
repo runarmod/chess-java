@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -25,9 +25,6 @@ public class ChessGameController extends SceneSwitcher implements Initializable 
     private GridPane grid, backgroundBoard;
 
     @FXML
-    private AnchorPane gridPane;
-
-    @FXML
     private Text player1time, player2time;
 
     private ChessBoard chessboard;
@@ -35,11 +32,6 @@ public class ChessGameController extends SceneSwitcher implements Initializable 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         handleRestartGame();
-
-        gridPane.setOnMousePressed(event -> {
-            chessboard.positionPressed(new Position(event));
-            System.out.println(new Position(event));
-        });
     }
 
     @FXML
@@ -52,6 +44,12 @@ public class ChessGameController extends SceneSwitcher implements Initializable 
             System.out.println("Read FEN from string");
         }
         drawBoard();
+    }
+
+    @FXML
+    private void handleGridPaneClicked(MouseEvent event) {
+        chessboard.positionPressed(new Position(event));
+        System.out.println(new Position(event));
     }
 
     @FXML
