@@ -9,6 +9,21 @@ import sjakk.ChessBoard;
 import sjakk.Player;
 import sjakk.Position;
 
+/**
+ * This abstract class represents all pieces on the board. It can be used to
+ * move pieces on the board, get the possible moves for a piece, get the image
+ * of the piece, see whether or not a position is threatened by the piece, and
+ * more.
+ * 
+ * @author Runar Saur Modahl
+ * @version 1.0
+ * @see King
+ * @see Queen
+ * @see Rook
+ * @see Bishop
+ * @see Knight
+ * @see Pawn
+ */
 public abstract class Piece {
     protected Position pos;
     protected ChessBoard board;
@@ -159,6 +174,13 @@ public abstract class Piece {
         moveCount++;
     }
 
+    /**
+     * Returns whether or not a given move for the piece will set the king in check.
+     * 
+     * @param position the position to move the piece to
+     * @return {@code true} if the king is in check after the move, {@code false}
+     *         otherwise
+     */
     protected boolean messesUpcheck(Position to) {
         if (!to.insideBoard())
             return false;
@@ -192,6 +214,18 @@ public abstract class Piece {
         this.imageView.setPreserveRatio(true);
     }
 
+    /**
+     * Places a piece for a given player on a postion on the map. The piece placed
+     * is decided by the parameter {@value c}. If c is uppercase, it will be white,
+     * otherwise it will be black. K = King, Q = Queen, R = Rook, B = Bishop, N =
+     * Knight, and P = Pawn.
+     * 
+     * @param player the player to place the piece for
+     * @param pos    the position to place the piece on
+     * @param board  the board to place the piece on
+     * @param c      the character representing the piece to place
+     * @return the piece placed
+     */
     public static Piece placePiece(Player player, Position pos, ChessBoard board, char c) {
         Piece piece;
 
@@ -226,6 +260,11 @@ public abstract class Piece {
         return piece;
     }
 
+    /**
+     * Get the owner of the piece
+     * 
+     * @return the owner of the piece
+     */
     public Player getOwner() {
         return owner;
     }
