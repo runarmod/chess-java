@@ -20,9 +20,9 @@ public class FENParser {
         this.stream = stream;
     }
 
-    public ChessBoard readFENFromStream() {
+    public ChessBoard readFENFromStream() throws IllegalFENException {
         if (stream == null) {
-            throw new NullPointerException("Stream is null");
+            throw new NullPointerException("Couldn't find file");
         }
         Scanner scanner = new Scanner(stream);
         ChessBoard board = readFEN(scanner.nextLine());
@@ -31,12 +31,18 @@ public class FENParser {
         return board;
     }
 
-    public ChessBoard readFEN(String input) {
+    public ChessBoard readFEN(String input) throws IllegalFENException {
         Player white = new Player(PieceColor.WHITE);
         Player black = new Player(PieceColor.BLACK);
         ChessBoard board = new ChessBoard(white, black);
         String[] data = input.split(" ");
+        if (data.length != 6) {
+            throw new IllegalFENException("Invalid FEN string");
+        }
         String[] rows = data[0].split("/");
+        if (rows.length != 8) {
+            throw new IllegalFENException("Invalid FEN string");
+        }
 
         for (int i = 0; i < 8; i++) {
             String row = rows[i];
@@ -82,5 +88,14 @@ public class FENParser {
         // Piece.getPiece(data[3].charAt(0), new Position(0, 0), board));
 
         return board;
+    }
+
+    public ChessBoard useDefaultFEN() {
+        try {
+            return readFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        } catch (IllegalFENException e) {
+            // Wont happen since the above string is valid
+            return null;
+        }
     }
 }

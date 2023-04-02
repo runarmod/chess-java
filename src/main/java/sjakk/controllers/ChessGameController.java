@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -16,8 +15,9 @@ import sjakk.ChessBoard;
 import sjakk.Position;
 import sjakk.pieces.Piece;
 import sjakk.utils.FENParser;
+import sjakk.utils.IllegalFENException;
 
-public class ChessGameController extends SceneSwitcher implements Initializable {
+public class ChessGameController extends SceneSwitcher {
     @FXML
     private TextArea moves;
 
@@ -28,6 +28,14 @@ public class ChessGameController extends SceneSwitcher implements Initializable 
     private Text player1time, player2time;
 
     private ChessBoard chessboard;
+    private String FENString = "";
+
+    public ChessGameController() {
+    }
+
+    public ChessGameController(String FENString) {
+        this.FENString = FENString;
+    }
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -37,12 +45,20 @@ public class ChessGameController extends SceneSwitcher implements Initializable 
     @FXML
     private void handleRestartGame() {
         try {
-            chessboard = new FENParser(App.class.getResourceAsStream("defaultStart.fen")).readFENFromStream();
-            System.out.println("Read FEN from file");
-        } catch (NullPointerException e) {
-            chessboard = new FENParser().readFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-            System.out.println("Read FEN from string");
+            if (FENString.length() > 0) {
+                chessboard = new FENParser().readFEN(FENString);
+                System.out.println("Read FEN from string");
+            } else {
+                chessboard = new FENParser(App.class.getResourceAsStream("defaultStart.fen")).readFENFromStream();
+                System.out.println("Read FEN from file");
+            }
+        } catch (NullPointerException | IllegalFENException e) {
+            chessboard = new FENParser().useDefaultFEN();
+            System.out.println("Could not read FEN, using default");
+            System.out.println(e.getMessage());
+            // TODO: Add error message to screen
         }
+
         drawBoard();
     }
 

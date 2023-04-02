@@ -17,8 +17,13 @@
             </Text>
             <Button layoutX="240.0" layoutY="200.0" mnemonicParsing="false" onAction="#playChess" prefHeight="40.0" prefWidth="120.0" text="Play Chess" />
             <Button layoutX="240.0" layoutY="258.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Analyze Game" />
-            <Button layoutX="240.0" layoutY="317.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Load Game" />
-            <TextField layoutX="226.0" layoutY="374.0" style="visibility: false;" />
+            <Button fx:id="loadGameButton" layoutX="240.0" layoutY="317.0" mnemonicParsing="false" onAction="#loadGame" prefHeight="40.0" prefWidth="120.0" text="Load Game" />
+            <AnchorPane fx:id="inputFENAnchor" layoutX="125.0" layoutY="317.0" prefHeight="40.0" prefWidth="350.0">
+               <children>
+                  <TextField fx:id="loadGameField" promptText="Input FEN-string here" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="0.0" />
+                  <Button mnemonicParsing="false" onAction="#playChess" prefWidth="75.0" text="Start game" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>
