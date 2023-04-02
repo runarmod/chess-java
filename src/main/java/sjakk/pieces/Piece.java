@@ -59,6 +59,16 @@ public abstract class Piece {
         return name;
     }
 
+    public char toChar() {
+        char out = name.toLowerCase().toCharArray()[0];
+        if (this instanceof Knight)
+            out = 'n';
+
+        if (owner.isWhite())
+            out = Character.toUpperCase(out);
+        return out;
+    }
+
     /**
      * Returns a collection of all legal moves for this piece.
      * 

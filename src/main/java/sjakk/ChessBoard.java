@@ -7,6 +7,7 @@ import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import sjakk.pieces.*;
+import sjakk.utils.FENParser;
 
 /**
  * This class represents the chess board. It contains a 2D array of pieces, and
@@ -48,6 +49,8 @@ public class ChessBoard implements Iterable<Piece> {
     private Player white;
     private Player black;
     private Player turn;
+    private int halfMoves = 0;
+    private int fullMoves = 0;
 
     public ChessBoard(Player white, Player black) {
         this(false, white, black);
@@ -179,9 +182,9 @@ public class ChessBoard implements Iterable<Piece> {
             return;
         }
 
-        if (piece.getX() == 7) {
+        if (originalPos.getX() == 7) {
             piece.getOwner().setCastlingKingSide(false);
-        } else if (piece.getX() == 0) {
+        } else if (originalPos.getX() == 0) {
             piece.getOwner().setCastlingQueenSide(false);
         }
     }
@@ -191,13 +194,16 @@ public class ChessBoard implements Iterable<Piece> {
      * captured is removed from the board.
      * 
      * @param piece The piece that moved.
+     * @return whether an en passant was made.
      */
-    private void handleEnPassantMove(Piece piece) {
+    private boolean handleEnPassantMove(Piece piece) {
         if (piece instanceof Pawn && ((Pawn) piece).getHasMadeEnPassant()) {
             System.out.println("Pawn has made an passant");
             Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
             setPosition(pos, null);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -209,6 +215,7 @@ public class ChessBoard implements Iterable<Piece> {
      */
     public void move(Piece piece, Position to) {
         Position originalPos = piece.getPos();
+        boolean pieceWasCaptured = (getPosition(to) != null);
 
         moves.add(piece.getPos().toString() + to.toString());
         setPosition(piece.getPos(), null);
@@ -216,10 +223,22 @@ public class ChessBoard implements Iterable<Piece> {
         piece.setPos(to);
 
         handleCastlingDisabling(piece, originalPos);
-        handleEnPassantMove(piece);
+
+        pieceWasCaptured |= handleEnPassantMove(piece);
 
         lastMovedPiece = piece;
         piece.addMovedCount();
+
+        if (!piece.getOwner().isWhite()) {
+            System.out.println("Black made a move");
+            fullMoves++;
+        }
+
+        if (!(piece instanceof Pawn || pieceWasCaptured)) {
+            halfMoves++;
+        } else {
+            halfMoves = 0;
+        }
     }
 
     /**
@@ -309,8 +328,33 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     public String getCastlingRights() {
-        String out = "White: " + white.getCastlingRights();
-        out += "\nBlack: " + black.getCastlingRights();
-        return out;
+        String rights = white.getCastlingRights() + black.getCastlingRights();
+        if (rights.length() == 0)
+            rights = "-";
+        return rights;
+    }
+
+    public String getFEN() {
+        return FENParser.generateFEN(this);
+    }
+
+    public Player getPlayerTurn() {
+        return turn;
+    }
+
+    public void setHalfMoves(int moves) {
+        halfMoves = moves;
+    }
+
+    public int getHalfMoves() {
+        return halfMoves;
+    }
+
+    public void setFullMoves(int moves) {
+        fullMoves = moves;
+    }
+
+    public int getFullMoves() {
+        return fullMoves;
     }
 }

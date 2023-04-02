@@ -56,6 +56,10 @@ public class Player {
         return "Player [color=" + color + ", time=" + time + ", hasTurn=" + hasTurn + "]";
     }
 
+    public char toChar() {
+        return (color ? 'w' : 'b');
+    }
+
     public int getDir() {
         return dir;
     }
@@ -88,11 +92,15 @@ public class Player {
     public String getCastlingRights() {
         String rights = "";
         if (canCastleKingSide) {
-            rights += "K";
+            rights += "k";
         }
         if (canCastleQueenSide) {
-            rights += "Q";
+            rights += "q";
         }
+
+        if (color)
+            rights = rights.toUpperCase();
+
         return rights;
     }
 }

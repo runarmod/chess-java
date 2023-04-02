@@ -113,4 +113,9 @@ public class ChessGameController extends SceneSwitcher {
         insertPane("TitleScreen.fxml", baseAnchor, new TitleController());
     }
 
+    @FXML
+    private void exportGame(){
+        String position = chessboard.getFEN();
+    }
+
 }

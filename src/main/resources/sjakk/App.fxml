@@ -182,7 +182,7 @@
             </AnchorPane>
             <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="430.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <AnchorPane prefHeight="340.0" prefWidth="165.0" style="-fx-background-color: #656565;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="140.0">
+                  <AnchorPane prefHeight="340.0" prefWidth="165.0" style="-fx-background-color: #656565;" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="140.0">
                      <children>
                         <TextArea fx:id="moves" editable="false" prefHeight="300.0" prefWidth="150.0" style="-fx-opacity: 1;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="35.0">
                            <font>
@@ -221,6 +221,11 @@
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
+                  </Button>
+                  <Button layoutX="43.0" layoutY="440.0" mnemonicParsing="false" onAction="#exportGame" prefHeight="40.0" prefWidth="85.0" text="Export Game" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Consolas" size="16.0" />
+                     </font>
                   </Button>
                </children>
             </AnchorPane>

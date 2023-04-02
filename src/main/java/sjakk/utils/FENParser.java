@@ -87,8 +87,15 @@ public class FENParser {
             }
         }
 
+        // TODO: possible en passant target
         // board.setLastPieceMoved(data[3].equals("-") ? null :
         // Piece.getPiece(data[3].charAt(0), new Position(0, 0), board));
+
+        // TODO: halfmoves
+        board.setHalfMoves(Integer.parseInt(data[4]));
+
+        // TODO: fullmoves
+        board.setFullMoves(Integer.parseInt(data[5]));
 
         return board;
     }
@@ -159,5 +166,50 @@ public class FENParser {
         String whiteSide = blackSide.toUpperCase();
         String FENString = blackSide + "/pppppppp/8/8/8/8/PPPPPPPP/" + whiteSide + " w - - 0 1";
         return FENString;
+    }
+
+    public static String generateFEN(ChessBoard board) {
+        StringBuilder FENString = new StringBuilder();
+
+        // First part of the FEN string
+        int emptySpaces = 0;
+        for (int y = 7; y >= 0; y--) {
+            for (int x = 0; x < 8; x++) {
+                Piece piece = board.getPosition(new Position(x, y));
+                if (piece == null) {
+                    emptySpaces++;
+                    continue;
+                }
+                if (emptySpaces != 0) {
+                    FENString.append(Integer.toString(emptySpaces));
+                    emptySpaces = 0;
+                }
+                FENString.append(piece.toChar());
+            }
+            if (emptySpaces != 0) {
+                FENString.append(Integer.toString(emptySpaces));
+                emptySpaces = 0;
+            }
+            if (y != 0)
+                FENString.append('/');
+        }
+
+        // Whos turn?
+        FENString.append(" " + board.getPlayerTurn().toChar());
+
+        // What can be castled?
+        FENString.append(" " + board.getCastlingRights());
+
+        // TODO: Can there be made en passant? Where?
+        FENString.append(" -");
+
+        // Halfmoves
+        FENString.append(" " + board.getHalfMoves());
+
+        // Fullmoves
+        FENString.append(" " + board.getFullMoves());
+
+        System.out.println(FENString);
+        return FENString.toString();
     }
 }
