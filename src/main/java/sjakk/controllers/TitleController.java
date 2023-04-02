@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import sjakk.utils.FENParser;
 
 public class TitleController extends SceneSwitcher {
 
@@ -27,6 +28,12 @@ public class TitleController extends SceneSwitcher {
     @FXML
     private void playChess() {
         String FENString = loadGameField.getText();
+        insertPane("App.fxml", baseAnchor, new ChessGameController(FENString));
+    }
+
+    @FXML
+    private void playFischerRandom() {
+        String FENString = FENParser.generateFischerRandomFEN();
         insertPane("App.fxml", baseAnchor, new ChessGameController(FENString));
     }
 

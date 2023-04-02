@@ -1,6 +1,9 @@
 package sjakk.utils;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import sjakk.ChessBoard;
@@ -97,5 +100,64 @@ public class FENParser {
             // Wont happen since the above string is valid
             return null;
         }
+    }
+
+    private static String shuffleString(String string) {
+        StringBuilder builder = new StringBuilder(string.length());
+        List<Character> chars = new ArrayList<Character>();
+        for (char c : string.toCharArray()) {
+            chars.add(c);
+        }
+        while (chars.size() != 0) {
+            int randIndex = (int) (Math.random() * chars.size());
+            builder.append(chars.remove(randIndex));
+        }
+        return builder.toString();
+    }
+
+    private static boolean legalFirstRow(String string) {
+        int king = string.indexOf("k");
+        int bishop1 = string.indexOf("b");
+        int bishop2 = string.lastIndexOf("b");
+        int rook1 = string.indexOf("r");
+        int rook2 = string.lastIndexOf("r");
+
+        if ((bishop1 + bishop2) % 2 != 1) {
+            return false;
+        }
+
+        if (!(rook1 < king && king < rook2)) {
+            return false;
+        }
+
+        // Make sure we have the right count of every piece
+        Map<Character, Integer> row = Map.of('r', 2, 'n', 2, 'b', 2, 'q', 1, 'k', 1);
+        for (Character c : string.toCharArray()) {
+            if (string.chars().filter(e -> e == c).count() != row.get(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String generateFischerRandomFEN() {
+        final String defaultPlacement = "rnbqkbnr";
+        String blackSide = defaultPlacement;
+
+        // Have a max-shuffle-count in case the shuffle method somehow doesn't create a
+        // kegak string for a "long" time
+        int i = 0;
+        while (i++ < 1000) {
+            blackSide = shuffleString(blackSide);
+            if (legalFirstRow(blackSide))
+                break;
+        }
+
+        if (i >= 1000)
+            blackSide = defaultPlacement;
+
+        String whiteSide = blackSide.toUpperCase();
+        String FENString = blackSide + "/pppppppp/8/8/8/8/PPPPPPPP/" + whiteSide + " w - - 0 1";
+        return FENString;
     }
 }

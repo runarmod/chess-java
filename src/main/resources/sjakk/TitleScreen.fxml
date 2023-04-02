@@ -16,7 +16,7 @@
                </font>
             </Text>
             <Button layoutX="240.0" layoutY="200.0" mnemonicParsing="false" onAction="#playChess" prefHeight="40.0" prefWidth="120.0" text="Play Chess" />
-            <Button layoutX="240.0" layoutY="258.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" text="Analyze Game" />
+            <Button layoutX="240.0" layoutY="258.0" mnemonicParsing="false" onAction="#playFischerRandom" prefHeight="40.0" prefWidth="120.0" text="Fischer Random" />
             <Button fx:id="loadGameButton" layoutX="240.0" layoutY="317.0" mnemonicParsing="false" onAction="#loadGame" prefHeight="40.0" prefWidth="120.0" text="Load Game" />
             <AnchorPane fx:id="inputFENAnchor" layoutX="125.0" layoutY="317.0" prefHeight="40.0" prefWidth="350.0">
                <children>
