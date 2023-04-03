@@ -1,5 +1,9 @@
 package sjakk.controllers;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -49,14 +53,18 @@ public class ChessGameController extends SceneSwitcher {
                 chessboard = new FENParser().readFEN(FENString);
                 System.out.println("Read FEN from string");
             } else {
-                chessboard = new FENParser(App.class.getResourceAsStream("defaultStart.fen")).readFENFromStream();
+                String sep = System.getProperty("file.separator");
+                File inFile = new File(System.getProperty("user.dir") + sep + "games" + sep + "defaultStart.fen");
+                InputStream inStream = new FileInputStream(inFile);
+
+                chessboard = new FENParser(inStream).readFENFromStream();
+
                 System.out.println("Read FEN from file");
             }
-        } catch (NullPointerException | IllegalFENException e) {
+        } catch (NullPointerException | IllegalFENException | FileNotFoundException e) {
             chessboard = new FENParser().useDefaultFEN();
             System.out.println("Could not read FEN, using default");
             System.out.println(e.getMessage());
-            // TODO: Add error message to screen
         }
 
         drawBoard();
@@ -114,8 +122,9 @@ public class ChessGameController extends SceneSwitcher {
     }
 
     @FXML
-    private void exportGame(){
+    private void exportGame() {
         String position = chessboard.getFEN();
+        ExportGameController popUp = new ExportGameController(position);
+        popUp.display();
     }
-
 }

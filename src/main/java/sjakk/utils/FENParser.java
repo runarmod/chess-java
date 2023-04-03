@@ -1,10 +1,16 @@
 package sjakk.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import sjakk.ChessBoard;
 import sjakk.PieceColor;
@@ -16,7 +22,6 @@ public class FENParser {
     private InputStream stream;
 
     public FENParser() {
-
     }
 
     public FENParser(InputStream stream) {
@@ -29,7 +34,7 @@ public class FENParser {
         }
         Scanner scanner = new Scanner(stream);
         ChessBoard board = readFEN(scanner.nextLine());
-        System.out.println(board);
+        // System.out.println(board);
         scanner.close();
         return board;
     }
@@ -91,10 +96,8 @@ public class FENParser {
         // board.setLastPieceMoved(data[3].equals("-") ? null :
         // Piece.getPiece(data[3].charAt(0), new Position(0, 0), board));
 
-        // TODO: halfmoves
         board.setHalfMoves(Integer.parseInt(data[4]));
 
-        // TODO: fullmoves
         board.setFullMoves(Integer.parseInt(data[5]));
 
         return board;
@@ -209,7 +212,57 @@ public class FENParser {
         // Fullmoves
         FENString.append(" " + board.getFullMoves());
 
-        System.out.println(FENString);
         return FENString.toString();
+    }
+
+    public static void saveToFile(String content) {
+        File defaultSaveDirectory = new File(
+                System.getProperty("user.dir") + System.getProperty("file.separator") + "games");
+        JFileChooser chooser = new JFileChooser(defaultSaveDirectory) {
+            // The following method is hevily insipred by stackoverflow:
+            // https://stackoverflow.com/a/3729157/10880273
+            @Override
+            public void approveSelection() {
+                File file = getSelectedFile();
+                if (file.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane.showConfirmDialog(this, "The file exists, overwrite?", "Existing file",
+                            JOptionPane.YES_NO_CANCEL_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            return;
+                        case JOptionPane.CLOSED_OPTION:
+                            return;
+                        case JOptionPane.CANCEL_OPTION:
+                            cancelSelection();
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("FEN files", "fen");
+        chooser.setFileFilter(filter);
+        chooser.setDialogTitle("Save State");
+        chooser.setSelectedFile(new File("mygame.fen"));
+
+        int returnState = chooser.showSaveDialog(null);
+        if (returnState == JFileChooser.APPROVE_OPTION) {
+            File file;
+            file = chooser.getSelectedFile();
+            if (!file.getName().endsWith(".fen")) {
+                file = new File(file.getAbsolutePath() + ".fen");
+            }
+
+            try {
+                FileOutputStream fw = new FileOutputStream(file);
+                fw.write(content.getBytes());
+                fw.close();
+            } catch (Exception e) {
+            }
+        }
     }
 }
