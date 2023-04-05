@@ -1,25 +1,27 @@
 package sjakk.controllers;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import sjakk.App;
 import sjakk.ChessBoard;
 import sjakk.Position;
 import sjakk.pieces.Piece;
 import sjakk.utils.FENParser;
 import sjakk.utils.IllegalFENException;
+import sjakk.utils.PopUp;
 
 public class ChessGameController extends SceneSwitcher {
     @FXML
@@ -33,6 +35,7 @@ public class ChessGameController extends SceneSwitcher {
 
     private ChessBoard chessboard;
     private String FENString = "";
+    private boolean hasShownGameOver = false;
 
     public ChessGameController() {
     }
@@ -73,7 +76,21 @@ public class ChessGameController extends SceneSwitcher {
     @FXML
     private void handleGridPaneClicked(MouseEvent event) {
         chessboard.positionPressed(new Position(event));
-        System.out.println(new Position(event));
+        drawBoard();
+        showGameOver();
+    }
+
+    private void showGameOver() {
+        if (hasShownGameOver)
+            return;
+
+        if (chessboard.getGameFinished()) {
+            System.out.println(chessboard.getGameMessage());
+            PopUp popUp = new PopUp("Game Over", true);
+            popUp.addNode(new Text(chessboard.getGameMessage()));
+            popUp.display();
+            hasShownGameOver = true;
+        }
     }
 
     @FXML
@@ -113,7 +130,6 @@ public class ChessGameController extends SceneSwitcher {
 
     private void updateMoves() {
         moves.setText("    WHITE | BLACK\n" + chessboard.getMoves());
-        System.out.println(chessboard.getCastlingRights());
     }
 
     @FXML
@@ -124,7 +140,18 @@ public class ChessGameController extends SceneSwitcher {
     @FXML
     private void exportGame() {
         String position = chessboard.getFEN();
-        ExportGameController popUp = new ExportGameController(position);
+        PopUp popUp = new PopUp("Export game", true);
+
+        TextField textField = new TextField(position);
+        textField.setEditable(false);
+        popUp.addNode(textField);
+
+        Button toFileButton = new Button("Export to file");
+        toFileButton.setOnAction(e -> {
+            FENParser.saveToFile(position);
+        });
+        popUp.addNode(toFileButton);
+
         popUp.display();
     }
 }

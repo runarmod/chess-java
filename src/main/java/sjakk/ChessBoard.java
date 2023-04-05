@@ -51,6 +51,8 @@ public class ChessBoard implements Iterable<Piece> {
     private Player turn;
     private int halfMoves = 0;
     private int fullMoves = 0;
+    private boolean gameFinished = false;
+    private String gameMessage = "";
 
     public ChessBoard(Player white, Player black) {
         this(false, white, black);
@@ -116,6 +118,8 @@ public class ChessBoard implements Iterable<Piece> {
      * @param position The position that was clicked.
      */
     public void positionPressed(Position position) {
+        if (gameFinished)
+            return;
         resetGridBackgroundMatrix();
         if (selectedPiece == null) {
             selectedPiece = getPosition(position);
@@ -136,14 +140,13 @@ public class ChessBoard implements Iterable<Piece> {
 
         try {
             selectedPiece.move(position);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println("Invalid move");
             selectedPiece = null;
             return;
         }
 
         selectedPiece = null;
-        turn = (turn == white ? black : white);
     }
 
     public boolean isValidMove(Piece piece, Position position) {
@@ -229,16 +232,82 @@ public class ChessBoard implements Iterable<Piece> {
         lastMovedPiece = piece;
         piece.addMovedCount();
 
+        handleHalfMove(piece);
+        handleFullMove(piece, pieceWasCaptured);
+
+        turn = (turn == white ? black : white);
+
+        checkGameFinished();
+    }
+
+    private void handleHalfMove(Piece piece) {
         if (!piece.getOwner().isWhite()) {
-            System.out.println("Black made a move");
+            // System.out.println("Black made a move");
             fullMoves++;
         }
+    }
 
+    private void handleFullMove(Piece piece, boolean pieceWasCaptured) {
         if (!(piece instanceof Pawn || pieceWasCaptured)) {
             halfMoves++;
         } else {
             halfMoves = 0;
         }
+    }
+
+    private void checkGameFinished() {
+        if (gameFinished)
+            return;
+
+        if (inCheckmate(turn)) {
+            System.out.println("Checkmate");
+            gameFinished = true;
+            gameMessage = turn + " got checkmated.";
+        } else if (inStalemate(turn)) {
+            System.out.println("Stalemate");
+            gameFinished = true;
+            gameMessage = turn + " got stalemated. Draw!";
+        } else if (inDraw()) {
+            System.out.println("Draw");
+            gameFinished = true;
+            gameMessage = "The game resultet in draw.";
+        }
+    }
+
+    private boolean inDraw() {
+        if (halfMoves >= 50)
+            return true;
+
+        return false;
+    }
+
+    private boolean inStalemate(Player player) {
+        if (inCheck(player))
+            return false;
+        for (Piece piece : this) {
+            if (piece.getOwner() == player) {
+                for (Position pos : piece.getLegalMoves()) {
+                    if (piece.isValidMove(pos))
+                        return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean inCheckmate(Player player) {
+        if (!inCheck(player))
+            return false;
+        for (Piece piece : this) {
+            if (piece.getOwner() == player) {
+                for (Position pos : piece.getLegalMoves()) {
+                    if (piece.isValidMove(pos))
+                        return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -357,4 +426,13 @@ public class ChessBoard implements Iterable<Piece> {
     public int getFullMoves() {
         return fullMoves;
     }
+
+    public boolean getGameFinished() {
+        return gameFinished;
+    }
+
+    public String getGameMessage() {
+        return gameMessage;
+    }
+
 }

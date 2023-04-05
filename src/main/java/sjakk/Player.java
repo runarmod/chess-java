@@ -53,7 +53,8 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player [color=" + color + ", time=" + time + ", hasTurn=" + hasTurn + "]";
+        // return "Player [color=" + color + ", time=" + time + ", hasTurn=" + hasTurn + "]";
+        return (color ? "White" : "Black");
     }
 
     public char toChar() {

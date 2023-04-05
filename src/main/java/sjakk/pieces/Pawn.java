@@ -2,6 +2,7 @@ package sjakk.pieces;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import sjakk.ChessBoard;
 import sjakk.Player;
@@ -14,6 +15,9 @@ public class Pawn extends Piece {
 
     public Pawn(Position position, ChessBoard board, Player owner) {
         super(position, board, owner, "Pawn");
+        if (getY() != (owner.isWhite() ? 1 : 6)) {
+            hasMoved = true;
+        }
     }
 
     @Override
@@ -28,12 +32,15 @@ public class Pawn extends Piece {
     public Collection<Position> getLegalMoves() {
         Collection<Position> legalMoves = new ArrayList<>();
 
-        Position[] testPostitions = {
+        Collection<Position> testPostitions = new ArrayList<>(List.of(
                 new Position(pos.getX(), pos.getY() + owner.getDir()), // 1 forward
-                new Position(pos.getX(), pos.getY() + 2 * owner.getDir()), // 2 forward
                 new Position(pos.getX() + 1, pos.getY() + owner.getDir()), // 1 forward, 1 right
                 new Position(pos.getX() - 1, pos.getY() + owner.getDir()) // 1 forward, 1 left
-        };
+        ));
+
+        if (!hasMoved) {
+            testPostitions.add(new Position(pos.getX(), pos.getY() + 2 * owner.getDir())); // 2 forward
+        }
 
         for (Position p : testPostitions) {
             if (messesUpcheck(p))
