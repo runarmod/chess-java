@@ -35,7 +35,8 @@
                <font>
                   <Font name="Consolas" size="12.0" />
                </font></Button>
-            <AnchorPane fx:id="inputFENAnchor" layoutX="125.0" layoutY="349.0" prefHeight="40.0" prefWidth="350.0" visible="false">
+            <Rectangle fx:id="loadGameBoxWide" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="150.0" layoutX="115.0" layoutY="309.0" stroke="BLACK" strokeType="INSIDE" width="370.0" />
+            <AnchorPane fx:id="inputFENAnchor" layoutX="125.0" layoutY="349.0" prefHeight="40.0" prefWidth="350.0">
                <children>
                   <TextField fx:id="loadGameField" promptText="Input FEN-string here" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="0.0" />
                   <Button mnemonicParsing="false" onAction="#playChess" prefWidth="75.0" text="Start game" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />

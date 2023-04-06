@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 import sjakk.utils.FENParser;
 
 public class TitleController extends SceneSwitcher {
@@ -22,9 +23,13 @@ public class TitleController extends SceneSwitcher {
     @FXML
     private TextField loadGameField;
 
+    @FXML
+    private Rectangle loadGameBoxWide;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inputFENAnchor.setVisible(false);
+        loadGameBoxWide.setVisible(false);
     }
 
     @FXML
@@ -41,6 +46,7 @@ public class TitleController extends SceneSwitcher {
 
     @FXML
     private void loadGameFromString() {
+        loadGameBoxWide.setVisible(true);
         inputFENAnchor.setVisible(true);
         loadGameButton.setVisible(false);
     }
