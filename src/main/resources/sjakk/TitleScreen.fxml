@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -15,15 +16,41 @@
                   <Font name="Consolas Bold" size="48.0" />
                </font>
             </Text>
-            <Button layoutX="240.0" layoutY="200.0" mnemonicParsing="false" onAction="#playChess" prefHeight="40.0" prefWidth="120.0" text="Play Chess" />
-            <Button layoutX="240.0" layoutY="258.0" mnemonicParsing="false" onAction="#playFischerRandom" prefHeight="40.0" prefWidth="120.0" text="Fischer Random" />
-            <Button fx:id="loadGameButton" layoutX="240.0" layoutY="317.0" mnemonicParsing="false" onAction="#loadGame" prefHeight="40.0" prefWidth="120.0" text="Load Game" />
-            <AnchorPane fx:id="inputFENAnchor" layoutX="125.0" layoutY="317.0" prefHeight="40.0" prefWidth="350.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="150.0" layoutX="230.0" layoutY="165.0" stroke="BLACK" strokeType="INSIDE" width="140.0" />
+            <Text layoutX="264.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quickstart:" textAlignment="CENTER">
+               <font>
+                  <Font name="Consolas" size="12.0" />
+               </font>
+            </Text>
+            <Button layoutX="240.0" layoutY="200.0" mnemonicParsing="false" onAction="#playChess" prefHeight="40.0" prefWidth="120.0" text="Play Chess" textAlignment="CENTER">
+               <font>
+                  <Font name="Consolas" size="12.0" />
+               </font></Button>
+            <Button layoutX="240.0" layoutY="258.0" mnemonicParsing="false" onAction="#playFischerRandom" prefHeight="40.0" prefWidth="120.0" text="Fischer Random" textAlignment="CENTER">
+               <font>
+                  <Font name="Consolas" size="12.0" />
+               </font></Button>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="150.0" layoutX="230.0" layoutY="309.0" stroke="BLACK" strokeType="INSIDE" width="140.0" />
+            <Button fx:id="loadGameButton" layoutX="240.0" layoutY="349.0" mnemonicParsing="false" onAction="#loadGameFromString" prefHeight="40.0" prefWidth="120.0" text="From String" textAlignment="CENTER">
+               <font>
+                  <Font name="Consolas" size="12.0" />
+               </font></Button>
+            <AnchorPane fx:id="inputFENAnchor" layoutX="125.0" layoutY="349.0" prefHeight="40.0" prefWidth="350.0" visible="false">
                <children>
                   <TextField fx:id="loadGameField" promptText="Input FEN-string here" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="0.0" />
                   <Button mnemonicParsing="false" onAction="#playChess" prefWidth="75.0" text="Start game" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
+            <Text layoutX="269.0" layoutY="332.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Load Game:" textAlignment="CENTER">
+               <font>
+                  <Font name="Consolas" size="12.0" />
+               </font>
+            </Text>
+            <Button layoutX="240.0" layoutY="408.0" mnemonicParsing="false" onAction="#loadGameFromFile" prefHeight="40.0" prefWidth="120.0" text="From File" textAlignment="CENTER">
+               <font>
+                  <Font name="Consolas" size="12.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

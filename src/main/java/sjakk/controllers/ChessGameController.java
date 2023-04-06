@@ -1,9 +1,7 @@
 package sjakk.controllers;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -37,9 +35,6 @@ public class ChessGameController extends SceneSwitcher {
     private String FENString = "";
     private boolean hasShownGameOver = false;
 
-    public ChessGameController() {
-    }
-
     public ChessGameController(String FENString) {
         this.FENString = FENString;
     }
@@ -53,19 +48,18 @@ public class ChessGameController extends SceneSwitcher {
     private void handleRestartGame() {
         try {
             if (FENString.length() > 0) {
-                chessboard = new FENParser().readFEN(FENString);
+                chessboard = FENParser.getBoardFromFEN(FENString);
                 System.out.println("Read FEN from string");
             } else {
                 String sep = System.getProperty("file.separator");
                 File inFile = new File(System.getProperty("user.dir") + sep + "games" + sep + "defaultStart.fen");
-                InputStream inStream = new FileInputStream(inFile);
-
-                chessboard = new FENParser(inStream).readFENFromStream();
+                String FENString = FENParser.readFENFromFile(inFile);
+                chessboard = FENParser.getBoardFromFEN(FENString);
 
                 System.out.println("Read FEN from file");
             }
         } catch (NullPointerException | IllegalFENException | FileNotFoundException e) {
-            chessboard = new FENParser().useDefaultFEN();
+            chessboard = FENParser.getBoardFromDefaultFEN();
             System.out.println("Could not read FEN, using default");
             System.out.println(e.getMessage());
         }

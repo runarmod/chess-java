@@ -1,6 +1,8 @@
 package sjakk.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,28 +20,20 @@ import sjakk.Player;
 import sjakk.Position;
 import sjakk.pieces.Piece;
 
-public class FENParser {
-    private InputStream stream;
+public abstract class FENParser {
+    public static final String FEN_EXTENSION = "fen";
+    public static final String DEFAULT_STRING = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-    public FENParser() {
-    }
-
-    public FENParser(InputStream stream) {
-        this.stream = stream;
-    }
-
-    public ChessBoard readFENFromStream() throws IllegalFENException {
-        if (stream == null) {
-            throw new NullPointerException("Couldn't find file");
-        }
-        Scanner scanner = new Scanner(stream);
-        ChessBoard board = readFEN(scanner.nextLine());
-        // System.out.println(board);
+    public static String readFENFromFile(File file) throws FileNotFoundException {
+        String FENString = "";
+        InputStream inStream = new FileInputStream(file);
+        Scanner scanner = new Scanner(inStream);
+        FENString = scanner.nextLine();
         scanner.close();
-        return board;
+        return FENString;
     }
 
-    public ChessBoard readFEN(String input) throws IllegalFENException {
+    public static ChessBoard getBoardFromFEN(String input) throws IllegalFENException {
         Player white = new Player(PieceColor.WHITE);
         Player black = new Player(PieceColor.BLACK);
         ChessBoard board = new ChessBoard(white, black);
@@ -103,9 +97,9 @@ public class FENParser {
         return board;
     }
 
-    public ChessBoard useDefaultFEN() {
+    public static ChessBoard getBoardFromDefaultFEN() {
         try {
-            return readFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            return getBoardFromFEN(DEFAULT_STRING);
         } catch (IllegalFENException e) {
             // Wont happen since the above string is valid
             return null;
@@ -218,6 +212,31 @@ public class FENParser {
     public static void saveToFile(String content) {
         File defaultSaveDirectory = new File(
                 System.getProperty("user.dir") + System.getProperty("file.separator") + "games");
+        JFileChooser chooser = getValidChooser(defaultSaveDirectory);
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("FEN files", FEN_EXTENSION);
+        chooser.setFileFilter(filter);
+        chooser.setDialogTitle("Save State");
+        chooser.setSelectedFile(new File("mygame." + FEN_EXTENSION));
+
+        int returnState = chooser.showSaveDialog(null);
+        if (returnState == JFileChooser.APPROVE_OPTION) {
+            File file;
+            file = chooser.getSelectedFile();
+            if (!file.getName().endsWith("." + FEN_EXTENSION)) {
+                file = new File(file.getAbsolutePath() + "." + FEN_EXTENSION);
+            }
+
+            try {
+                FileOutputStream fw = new FileOutputStream(file);
+                fw.write(content.getBytes());
+                fw.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private static JFileChooser getValidChooser(File defaultSaveDirectory) {
         JFileChooser chooser = new JFileChooser(defaultSaveDirectory) {
             // The following method is hevily insipred by stackoverflow:
             // https://stackoverflow.com/a/3729157/10880273
@@ -243,26 +262,25 @@ public class FENParser {
                 super.approveSelection();
             }
         };
-
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("FEN files", "fen");
-        chooser.setFileFilter(filter);
-        chooser.setDialogTitle("Save State");
-        chooser.setSelectedFile(new File("mygame.fen"));
-
-        int returnState = chooser.showSaveDialog(null);
-        if (returnState == JFileChooser.APPROVE_OPTION) {
-            File file;
-            file = chooser.getSelectedFile();
-            if (!file.getName().endsWith(".fen")) {
-                file = new File(file.getAbsolutePath() + ".fen");
-            }
-
-            try {
-                FileOutputStream fw = new FileOutputStream(file);
-                fw.write(content.getBytes());
-                fw.close();
-            } catch (Exception e) {
-            }
-        }
+        return chooser;
     }
+
+    public static File getFileFromChooser() {
+        File defaultDirectory = new File(
+                System.getProperty("user.dir") + System.getProperty("file.separator") + "games");
+        JFileChooser chooser = new JFileChooser(defaultDirectory);
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("FEN files", FEN_EXTENSION);
+        chooser.setFileFilter(filter);
+        chooser.setDialogTitle("Load State");
+
+        int returnState = chooser.showOpenDialog(null);
+        if (returnState == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            return file;
+        }
+
+        return null;
+    }
+
 }

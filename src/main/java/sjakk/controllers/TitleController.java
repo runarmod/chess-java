@@ -1,5 +1,7 @@
 package sjakk.controllers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -38,8 +40,19 @@ public class TitleController extends SceneSwitcher {
     }
 
     @FXML
-    private void loadGame() {
+    private void loadGameFromString() {
         inputFENAnchor.setVisible(true);
         loadGameButton.setVisible(false);
+    }
+
+    @FXML
+    private void loadGameFromFile() {
+        File file = FENParser.getFileFromChooser();
+        try {
+            String FENString = FENParser.readFENFromFile(file);
+            insertPane("App.fxml", baseAnchor, new ChessGameController(FENString));
+        } catch (FileNotFoundException e) {
+            // TODO: Pop up with info about file not found
+        }
     }
 }
