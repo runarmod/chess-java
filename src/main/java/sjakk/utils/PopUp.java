@@ -13,12 +13,18 @@ import javafx.stage.Stage;
 
 public class PopUp {
     private Collection<Node> nodes = new ArrayList<>();
-    private boolean closeButton;
+    private boolean extraCloseButton;
+    private boolean closeable = true;
     private String windowTitle;
 
-    public PopUp(String windowTitle, boolean closeButton) {
-        this.closeButton = closeButton;
+    public PopUp(String windowTitle, boolean extraCloseButton) {
+        this.extraCloseButton = extraCloseButton;
         this.windowTitle = windowTitle;
+    }
+
+    public PopUp(String windowTitle, boolean extraCloseButton, boolean closeable) {
+        this(windowTitle, extraCloseButton);
+        this.closeable = closeable;
     }
 
     public void addNode(Node node) {
@@ -30,7 +36,11 @@ public class PopUp {
         popupwindow.initModality(Modality.APPLICATION_MODAL);
         popupwindow.setTitle(windowTitle);
 
-        if (closeButton) {
+        if (!closeable) {
+            popupwindow.setOnCloseRequest(e -> e.consume());
+        }
+
+        if (extraCloseButton) {
             Button close = new Button("Close");
             close.setOnAction(e -> popupwindow.close());
             nodes.add(close);

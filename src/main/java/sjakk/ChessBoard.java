@@ -1,13 +1,19 @@
 package sjakk;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import sjakk.controllers.UpgradePawnController;
 import sjakk.pieces.*;
 import sjakk.utils.FENParser;
+import sjakk.utils.PopUp;
 
 /**
  * This class represents the chess board. It contains a 2D array of pieces, and
@@ -237,12 +243,49 @@ public class ChessBoard implements Iterable<Piece> {
 
         turn = (turn == white ? black : white);
 
+        if (piece instanceof Pawn && (to.getY() == 0 || to.getY() == 7)) {
+            promotePawn((Pawn) piece);
+        }
+
         checkGameFinished();
+    }
+
+    private void promotePawn(Pawn piece) {
+        Piece newPiece;
+        try {
+            URL url = getClass().getResource("/sjakk/UpgradePawn.fxml");
+            FXMLLoader loader = new FXMLLoader(url);
+            loader.setController(new UpgradePawnController());
+
+            Node node = loader.load();
+            PopUp popUp = new PopUp("Promote pawn", false, false);
+            popUp.addNode(node);
+            popUp.display();
+            switch (UpgradePawnController.getUpgradeChoice()) {
+                case "rook":
+                    newPiece = new Rook(piece.getPos(), this, piece.getOwner());
+                    break;
+                case "bishop":
+                    newPiece = new Bishop(piece.getPos(), this, piece.getOwner());
+                    break;
+                case "knight":
+                    newPiece = new Knight(piece.getPos(), this, piece.getOwner());
+                    break;
+                case "queen":
+                default:
+                    newPiece = new Queen(piece.getPos(), this, piece.getOwner());
+                    break;
+            }
+
+        } catch (IOException e) {
+            System.out.println("Could not load fxml file, using queen as default promotion");
+            newPiece = new Queen(piece.getPos(), this, piece.getOwner());
+        }
+        setPosition(piece.getPos(), newPiece);
     }
 
     private void handleHalfMove(Piece piece) {
         if (!piece.getOwner().isWhite()) {
-            // System.out.println("Black made a move");
             fullMoves++;
         }
     }
@@ -434,5 +477,4 @@ public class ChessBoard implements Iterable<Piece> {
     public String getGameMessage() {
         return gameMessage;
     }
-
 }
