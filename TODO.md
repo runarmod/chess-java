@@ -6,8 +6,8 @@
 - [x] Create test for knight
 - [x] Create test for king
 - [x] Fix en passant
-- [ ] Fix mate
-- [ ] Fix castling
+- [x] Fix mate
+- [x] Fix castling
 - [ ] Bruk FEN i tests
 
 
@@ -16,7 +16,7 @@
 - [x] Title
 - [x] Chessboard
 - [ ] Timer
-- [ ] Import/export position
+- [x] Import/export position
 - [x] Restart game
 - [x] Liste med trekk
 - [ ] Tatte brikker
