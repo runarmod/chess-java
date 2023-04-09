@@ -7,11 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import sjakk.pieces.Bishop;
-import sjakk.pieces.Knight;
-import sjakk.pieces.Piece;
-import sjakk.pieces.Queen;
-import sjakk.pieces.Rook;
 
 public class UpgradePawnController implements Initializable {
     @FXML
@@ -28,14 +23,9 @@ public class UpgradePawnController implements Initializable {
     }
 
     private void choose(String pieceType) {
-        // Upgrade the pawn
-        System.out.println("Upgrading pawn to " + pieceType);
         upgradeChoice = pieceType;
 
-        // Close the window
-        System.out.println("Closing window");
         Stage stage = (Stage) queen.getScene().getWindow();
-        // do what you have to do
         stage.close();
     }
 
