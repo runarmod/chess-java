@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>TDT4100_project</groupId>
-    <artifactId>tdt4100_v2023_prosjekt_boilerplate</artifactId>
+    <artifactId>tdt4100_v2023_prosjekt_sjakk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>tdt4100_v2023_prosjekt_boilerplate</name>
+    <name>tdt4100_v2023_prosjekt_sjakk</name>
 
     <dependencies>
         <dependency>

@@ -20,17 +20,11 @@ public class App extends Application {
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Super sjakk");
 
-        // FXMLLoader chessLoader = new FXMLLoader(getClass().getResource("App.fxml"));
-        // chessLoader.setController(new ChessGameController());
-        // chessScene = new Scene(chessLoader.load());
-        // chessScene.setFill(Color.TRANSPARENT);
-
         FXMLLoader titleLoader = new FXMLLoader(getClass().getResource("TitleScreen.fxml"));
         titleLoader.setController(new TitleController());
         titleScene = new Scene(titleLoader.load());
         titleScene.setFill(Color.TRANSPARENT);
 
-        // primaryStage.setScene(chessScene);
         primaryStage.setScene(titleScene);
         primaryStage.setResizable(false);
 
