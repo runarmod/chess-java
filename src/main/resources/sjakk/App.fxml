@@ -182,21 +182,7 @@
             </AnchorPane>
             <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="430.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <AnchorPane prefHeight="340.0" prefWidth="165.0" style="-fx-background-color: #656565;" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="140.0">
-                     <children>
-                        <TextArea fx:id="moves" editable="false" prefHeight="300.0" prefWidth="150.0" style="-fx-opacity: 1;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="35.0">
-                           <font>
-                              <Font name="Consolas" size="12.0" />
-                           </font>
-                        </TextArea>
-                        <Text boundsType="LOGICAL_VERTICAL_CENTER" fill="WHITE" layoutY="26.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-text-alignment: center;" text="Moves" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="166.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font name="Consolas Bold" size="32.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="65.0" prefWidth="166.0" style="-fx-background-color: #656565;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane prefHeight="65.0" prefWidth="166.0" style="-fx-background-color: #656565;" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: WHITE;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                            <children>
@@ -214,7 +200,21 @@
                         </AnchorPane>
                      </children>
                   </AnchorPane>
-                  <Button layoutY="81.0" mnemonicParsing="false" onAction="#handleRestartGame" prefHeight="40.0" text="Restart Game" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="81.0">
+                  <AnchorPane prefHeight="340.0" prefWidth="165.0" style="-fx-background-color: #656565;" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TextArea fx:id="moves" editable="false" prefHeight="300.0" prefWidth="150.0" style="-fx-opacity: 1;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="35.0">
+                           <font>
+                              <Font name="Consolas" size="12.0" />
+                           </font>
+                        </TextArea>
+                        <Text boundsType="LOGICAL_VERTICAL_CENTER" fill="WHITE" layoutY="26.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-text-alignment: center;" text="Moves" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="166.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font name="Consolas Bold" size="32.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </AnchorPane>
+                  <Button layoutY="380.0" mnemonicParsing="false" onAction="#handleRestartGame" prefHeight="40.0" text="Restart Game" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="380.0">
                      <font>
                         <Font name="Consolas" size="16.0" />
                      </font>
@@ -222,7 +222,7 @@
                         <Insets />
                      </opaqueInsets>
                   </Button>
-                  <Button layoutX="43.0" layoutY="440.0" mnemonicParsing="false" onAction="#exportGame" prefHeight="40.0" prefWidth="85.0" text="Export Game" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <Button layoutX="43.0" layoutY="440.0" mnemonicParsing="false" onAction="#exportGame" prefHeight="40.0" text="Export Game" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <font>
                         <Font name="Consolas" size="16.0" />
                      </font>
