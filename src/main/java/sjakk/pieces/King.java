@@ -168,12 +168,12 @@ public class King extends Piece {
         int y = pos.getY();
         if (to.getX() == pos.getX() - 2) {
             // Castling queen side
-            board.move(board.getPosition(new Position(0, y)), new Position(3, y));
+            board.move(board.getPosition(new Position(0, y)), new Position(3, y), true);
         } else if (to.getX() == pos.getX() + 2) {
             // Castling king side
-            board.move(board.getPosition(new Position(7, y)), new Position(5, y));
+            board.move(board.getPosition(new Position(7, y)), new Position(5, y), true);
         }
 
-        board.move(this, to);
+        board.move(this, to, true);
     }
 }

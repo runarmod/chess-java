@@ -1,10 +1,8 @@
 package sjakk.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,17 +24,16 @@ public abstract class FENParser {
 
     public static String readFENFromFile(File file) throws FileNotFoundException {
         String FENString = "";
-        InputStream inStream = new FileInputStream(file);
-        Scanner scanner = new Scanner(inStream);
+        Scanner scanner = new Scanner(file);
         FENString = scanner.nextLine();
         scanner.close();
         return FENString;
     }
 
-    public static ChessBoard getBoardFromFEN(String input) throws IllegalFENException {
+    public static ChessBoard getBoardFromFEN(String input, boolean test) throws IllegalFENException {
         Player white = new Player(PieceColor.WHITE);
         Player black = new Player(PieceColor.BLACK);
-        ChessBoard board = new ChessBoard(white, black);
+        ChessBoard board = new ChessBoard(test, white, black);
         String[] data = input.split(" ");
         if (data.length != 6) {
             throw new IllegalFENException("Invalid FEN string");
@@ -97,6 +94,10 @@ public abstract class FENParser {
         return board;
     }
 
+    public static ChessBoard getBoardFromFEN(String input) throws IllegalFENException {
+        return getBoardFromFEN(input, false);
+    }
+
     public static ChessBoard getBoardFromDefaultFEN() {
         try {
             return getBoardFromFEN(DEFAULT_STRING);
@@ -119,7 +120,24 @@ public abstract class FENParser {
         return builder.toString();
     }
 
-    private static boolean legalFirstRow(String string) {
+    public static boolean legalFischerRandom(String FENString) {
+        if (FENString.split("/").length != 8) {
+            return false;
+        }
+
+        String whiteSide = FENString.split(" ")[0].split("/")[7];
+        String blackSide = FENString.split("/")[0];
+
+        if (!legalFirstRowFischerRandom(blackSide))
+            return false;
+
+        if (!legalFirstRowFischerRandom(whiteSide.toLowerCase()))
+            return false;
+
+        return blackSide.equals(whiteSide.toLowerCase());
+    }
+
+    private static boolean legalFirstRowFischerRandom(String string) {
         int king = string.indexOf("k");
         int bishop1 = string.indexOf("b");
         int bishop2 = string.lastIndexOf("b");
@@ -149,11 +167,11 @@ public abstract class FENParser {
         String blackSide = defaultPlacement;
 
         // Have a max-shuffle-count in case the shuffle method somehow doesn't create a
-        // kegak string for a "long" time
+        // legal string for a "long" time
         int i = 0;
         while (i++ < 1000) {
             blackSide = shuffleString(blackSide);
-            if (legalFirstRow(blackSide))
+            if (legalFirstRowFischerRandom(blackSide))
                 break;
         }
 
@@ -209,36 +227,51 @@ public abstract class FENParser {
         return FENString.toString();
     }
 
-    public static void saveToFile(String content) {
-        File defaultSaveDirectory = new File(
-                System.getProperty("user.dir") + System.getProperty("file.separator") + "games");
-        JFileChooser chooser = getValidChooser(defaultSaveDirectory);
+    /**
+     * Saves the given FEN string to a file. If no file location is given, a file
+     * chooser UI will be shown.
+     * 
+     * @param content  The FEN string to save
+     * @param location The location to save the FEN string to. If null, a file
+     *                 chooser UI will be shown.
+     */
+    public static void saveToFile(String content, File location) {
+        File file = location;
+        if (file == null) {
+            File defaultSaveDirectory = new File(
+                    System.getProperty("user.dir") + System.getProperty("file.separator") + "games");
+            JFileChooser chooser = getValidChooser(defaultSaveDirectory);
 
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("FEN files", FEN_EXTENSION);
-        chooser.setFileFilter(filter);
-        chooser.setDialogTitle("Save State");
-        chooser.setSelectedFile(new File("mygame." + FEN_EXTENSION));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("FEN files", FEN_EXTENSION);
+            chooser.setFileFilter(filter);
+            chooser.setDialogTitle("Save State");
+            chooser.setSelectedFile(new File("mygame." + FEN_EXTENSION));
 
-        int returnState = chooser.showSaveDialog(null);
-        if (returnState == JFileChooser.APPROVE_OPTION) {
-            File file;
-            file = chooser.getSelectedFile();
-            if (!file.getName().endsWith("." + FEN_EXTENSION)) {
-                file = new File(file.getAbsolutePath() + "." + FEN_EXTENSION);
-            }
-
-            try {
-                FileOutputStream fw = new FileOutputStream(file);
-                fw.write(content.getBytes());
-                fw.close();
-            } catch (Exception e) {
+            int returnState = chooser.showSaveDialog(null);
+            if (returnState == JFileChooser.APPROVE_OPTION) {
+                file = chooser.getSelectedFile();
             }
         }
+
+        if (!file.getName().endsWith("." + FEN_EXTENSION)) {
+            file = new File(file.getAbsolutePath() + "." + FEN_EXTENSION);
+        }
+
+        try {
+            FileOutputStream fw = new FileOutputStream(file);
+            fw.write(content.getBytes());
+            fw.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public static void saveToFile(String content) {
+        saveToFile(content, null);
     }
 
     private static JFileChooser getValidChooser(File defaultSaveDirectory) {
         JFileChooser chooser = new JFileChooser(defaultSaveDirectory) {
-            // The following method is hevily insipred by stackoverflow:
+            // The following method is heavily inspired by stackoverflow:
             // https://stackoverflow.com/a/3729157/10880273
             @Override
             public void approveSelection() {

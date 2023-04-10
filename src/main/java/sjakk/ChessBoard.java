@@ -219,14 +219,16 @@ public class ChessBoard implements Iterable<Piece> {
      * Moves a piece to a new position. Updates the information on the board and for
      * the pieces.
      * 
-     * @param piece The piece to move.
-     * @param to    The position to move the piece to.
+     * @param piece    The piece to move.
+     * @param to       The position to move the piece to.
+     * @param isCastle Whether the move is a castle move. If it is a castle-move,
+     *                 the move count, list and turn is only modified if it is the
+     *                 king which moves.
      */
-    public void move(Piece piece, Position to) {
+    public void move(Piece piece, Position to, boolean isCastle) {
         Position originalPos = piece.getPos();
         boolean pieceWasCaptured = (getPosition(to) != null);
 
-        moves.add(piece.getPos().toString() + to.toString());
         setPosition(piece.getPos(), null);
         setPosition(to, piece);
         piece.setPos(to);
@@ -238,16 +240,29 @@ public class ChessBoard implements Iterable<Piece> {
         lastMovedPiece = piece;
         piece.addMovedCount();
 
-        handleHalfMove(piece);
-        handleFullMove(piece, pieceWasCaptured);
-
-        turn = (turn == white ? black : white);
+        if (!isCastle || piece instanceof King) {
+            moves.add(piece.getPos().toString() + to.toString());
+            handleHalfMove(piece);
+            handleFullMove(piece, pieceWasCaptured);
+            turn = (turn == white ? black : white);
+        }
 
         if (piece instanceof Pawn && (to.getY() == 0 || to.getY() == 7)) {
             promotePawn((Pawn) piece);
         }
 
         checkGameFinished();
+    }
+
+    /**
+     * Moves a piece. Calls the other move-method with castleflag false.
+     * 
+     * @param piece The piece to move.
+     * @param to    The position to move the piece to.
+     * @see #move(Piece, Position, boolean)
+     */
+    public void move(Piece piece, Position to) {
+        move(piece, to, false);
     }
 
     private void promotePawn(Pawn piece) {
