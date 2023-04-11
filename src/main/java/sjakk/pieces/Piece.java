@@ -32,7 +32,7 @@ public abstract class Piece {
      * @param c      the character representing the piece to place
      * @return the piece placed
      */
-    public static Piece placePiece(final Player player, final Position pos, final ChessBoard board, final char c) {
+    public static Piece placePiece(Player player, Position pos, ChessBoard board, char c) {
         Piece piece;
 
         switch (c) {
@@ -96,6 +96,12 @@ public abstract class Piece {
         return name;
     }
 
+    /**
+     * Returns a char representation of the piece. Lowercase is black, uppercase is
+     * white. K = King, Q = Queen, R = Rook, B = Bishop, N = Knight, and P = Pawn.
+     * 
+     * @return a char representation of the piece.
+     */
     public char toChar() {
         char out = name.toLowerCase().toCharArray()[0];
         if (this instanceof Knight)
@@ -217,7 +223,7 @@ public abstract class Piece {
 
     /**
      * Returns whether or not a given move for the piece will set the king in check.
-     * Will not modify the board.
+     * Will <b>not</b> modify the board.
      * 
      * @param to the position to move the piece to
      * @return {@code true} if the king is in check after the move, {@code false}

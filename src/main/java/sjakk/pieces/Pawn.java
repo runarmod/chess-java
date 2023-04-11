@@ -8,11 +8,25 @@ import sjakk.ChessBoard;
 import sjakk.Player;
 import sjakk.Position;
 
+/**
+ * A Pawn is a {@link Piece} that can move one step forward, capture only one
+ * step diagonal forwards and two steps forward as first move. It can also make
+ * an en passant.
+ * 
+ * @see Piece
+ */
 public class Pawn extends Piece {
 
     private boolean hasMoved = false;
     private boolean hasMadeAnPassant = false;
 
+    /**
+     * Creates a new pawn on a position on a board for a player.
+     * 
+     * @param position The position of the pawn.
+     * @param board    The board the pawn is on.
+     * @param owner    The owner of the pawn.
+     */
     public Pawn(Position position, ChessBoard board, Player owner) {
         super(position, board, owner, "Pawn");
         if (getY() != (owner.isWhite() ? 1 : 6)) {
@@ -30,9 +44,9 @@ public class Pawn extends Piece {
 
     @Override
     public Collection<Position> getLegalMoves() {
-        Collection<Position> legalMoves = new ArrayList<>();
+        final Collection<Position> legalMoves = new ArrayList<>();
 
-        Collection<Position> testPostitions = new ArrayList<>(List.of(
+        final Collection<Position> testPostitions = new ArrayList<>(List.of(
                 new Position(pos.getX(), pos.getY() + owner.getDir()), // 1 forward
                 new Position(pos.getX() + 1, pos.getY() + owner.getDir()), // 1 forward, 1 right
                 new Position(pos.getX() - 1, pos.getY() + owner.getDir()) // 1 forward, 1 left
@@ -42,7 +56,7 @@ public class Pawn extends Piece {
             testPostitions.add(new Position(pos.getX(), pos.getY() + 2 * owner.getDir())); // 2 forward
         }
 
-        for (Position p : testPostitions) {
+        for (final Position p : testPostitions) {
             if (messesUpcheck(p))
                 continue;
             if (isValidMove(p)) {
@@ -66,14 +80,40 @@ public class Pawn extends Piece {
         hasMoved = true;
     }
 
+    /**
+     * Set if the pawn has made an en passant.
+     * 
+     * @param hasMadeAnPassant {@code true} if the pawn has made an en passant,
+     *                         {@code false} otherwise.
+     */
     public void setHasMadeAnPassant(boolean hasMadeAnPassant) {
         this.hasMadeAnPassant = hasMadeAnPassant;
     }
 
+    /**
+     * Returns if the pawn has made an en passant.
+     * 
+     * @return {@code true} if the pawn has made an en passant, {@code false}
+     *         otherwise.
+     */
     public boolean getHasMadeEnPassant() {
         return hasMadeAnPassant;
     }
 
+    @Override
+    protected boolean threatening(Position position) {
+        if (Math.abs(pos.getX() - position.getX()) == 1 && pos.getY() + owner.getDir() == position.getY()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a move is a valid straight-forward move.
+     * 
+     * @param to The position to move to.
+     * @return {@code true} if the move is valid, {@code false} otherwise.
+     */
     private boolean isValidStraightMove(Position to) {
         if (pos.getX() != to.getX()) {
             return false;
@@ -91,6 +131,13 @@ public class Pawn extends Piece {
         return false;
     }
 
+    /**
+     * Checks if a move is a valid capture move. This includes normal pawn-captures
+     * aswell as en passant.
+     * 
+     * @param to The position to move to.
+     * @return {@code true} if the move is valid, {@code false} otherwise.
+     */
     private boolean isValidCaptureMove(Position to) {
         if (Math.abs(pos.getX() - to.getX()) != 1) {
             return false;
@@ -110,6 +157,12 @@ public class Pawn extends Piece {
         return true;
     }
 
+    /**
+     * Checks if a move is an en passant.
+     * 
+     * @param to The position to move to.
+     * @return {@code true} if the move is an en passant, {@code false} otherwise.
+     */
     private boolean moveIsEnPassant(Position to) {
         if (Math.abs(pos.getX() - to.getX()) != 1) {
             return false;
@@ -120,19 +173,11 @@ public class Pawn extends Piece {
         if (board.getPosition(to) != null) {
             return false;
         }
-        Piece possiblyTake = board.getPosition(new Position(to.getX(), to.getY() - owner.getDir()));
+        final Piece possiblyTake = board.getPosition(new Position(to.getX(), to.getY() - owner.getDir()));
         if (!(possiblyTake instanceof Pawn)) {
             return false;
         }
         if (board.getLastPieceMoved() == possiblyTake && possiblyTake.getMoveCount() == 1) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    protected boolean threatening(Position position) {
-        if (Math.abs(pos.getX() - position.getX()) == 1 && pos.getY() + owner.getDir() == position.getY()) {
             return true;
         }
         return false;
