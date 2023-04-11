@@ -15,8 +15,7 @@ public class ChessBoardMoveTest {
     @Test
     public void testFirstPawnMove() {
         assertDoesNotThrow(
-                () -> board = FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-                        true),
+                () -> board = FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
                 "Should not throw on default start.");
 
         assertEquals(board.getFEN(), defaultFENString, "Should be the same FEN-string.");
@@ -32,8 +31,7 @@ public class ChessBoardMoveTest {
     @Test
     public void testCastlingMove() {
         assertDoesNotThrow(
-                () -> board = FENParser.getBoardFromFEN("7k/8/8/8/8/8/8/R3K3 w Q - 0 1",
-                        true),
+                () -> board = FENParser.getBoardFromFEN("7k/8/8/8/8/8/8/R3K3 w Q - 0 1"),
                 "Should not throw on this FEN-string.");
 
         assertFalse(board.getGameFinished(), "Game is not finished.");
@@ -46,7 +44,7 @@ public class ChessBoardMoveTest {
 
     @Test
     public void testEnPassant() {
-        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("7k/4p3/8/3P4/8/8/8/7K b - - 0 1", true),
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("7k/4p3/8/3P4/8/8/8/7K b - - 0 1"),
                 "Should not throw on this FEN-string.");
 
         assertFalse(board.getGameFinished(), "Game is not finished.");

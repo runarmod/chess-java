@@ -49,9 +49,6 @@ public abstract class Piece {
             board.setPosition(position, this);
         }
         this.owner = owner;
-
-        if (!board.isTest())
-            cropPieceImage(name);
     }
 
     @Override
@@ -162,15 +159,6 @@ public abstract class Piece {
     }
 
     /**
-     * Sets the background of all legal moves to light green.
-     */
-    public void setLegalMovesBackground() {
-        for (Position pos : getLegalMoves()) {
-            board.setGridBackgroundColor(pos.getX(), pos.getY(), Color.LIGHTGREEN);
-        }
-    }
-
-    /**
      * Gets the number of times the piece has moved.
      */
     public int getMoveCount() {
@@ -202,26 +190,6 @@ public abstract class Piece {
         board.setPosition(pos, this);
         board.setPosition(to, tmp);
         return messesUp;
-    }
-
-    /**
-     * Crops the image of the piece from the image of all pieces and sets it as the
-     * image of this piece.
-     * 
-     * @param pieceType the type of the piece (ex. "King")
-     */
-    private void cropPieceImage(String pieceType) {
-        this.imageView = new ImageView(ChessBoard.getAllPiecesImg());
-
-        int imgY = (owner.isWhite() ? 0 : 1);
-        int coloumnIndex = ChessBoard.getPieceImageIndex(pieceType);
-        final int size = 50;
-
-        this.imageView.setViewport(new Rectangle2D(coloumnIndex * size, imgY * size, size, size));
-
-        // Shrink to have border visible
-        this.imageView.setFitWidth(48);
-        this.imageView.setPreserveRatio(true);
     }
 
     /**

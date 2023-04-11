@@ -20,7 +20,7 @@ public abstract class PieceTest {
     public void setUp() {
         whitePlayer = new Player(PieceColor.WHITE);
         blackPlayer = new Player(PieceColor.BLACK);
-        board = new ChessBoard(true, whitePlayer, blackPlayer);
+        board = new ChessBoard(whitePlayer, blackPlayer);
     }
 
     protected static void checkCollectionsEqual(Collection<Position> returnedLegal, Collection<Position> actualLegal,

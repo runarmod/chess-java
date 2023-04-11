@@ -24,6 +24,7 @@ public abstract class SceneSwitcher implements Initializable {
             Parent pane = fxmlLoader.load();
             parent.getChildren().add(pane);
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Error loading FXML file: " + fxmlFileName);
             System.exit(1);
             return;

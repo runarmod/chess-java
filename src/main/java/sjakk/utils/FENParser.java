@@ -30,10 +30,10 @@ public abstract class FENParser {
         return FENString;
     }
 
-    public static ChessBoard getBoardFromFEN(String input, boolean test) throws IllegalFENException {
+    public static ChessBoard getBoardFromFEN(String input) throws IllegalFENException {
         Player white = new Player(PieceColor.WHITE);
         Player black = new Player(PieceColor.BLACK);
-        ChessBoard board = new ChessBoard(test, white, black);
+        ChessBoard board = new ChessBoard(white, black);
         String[] data = input.split(" ");
         if (data.length != 6) {
             throw new IllegalFENException("Invalid FEN string");
@@ -92,10 +92,6 @@ public abstract class FENParser {
         board.setFullMoves(Integer.parseInt(data[5]));
 
         return board;
-    }
-
-    public static ChessBoard getBoardFromFEN(String input) throws IllegalFENException {
-        return getBoardFromFEN(input, false);
     }
 
     public static ChessBoard getBoardFromDefaultFEN() {

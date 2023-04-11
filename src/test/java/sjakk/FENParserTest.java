@@ -45,16 +45,15 @@ public class FENParserTest {
     @Test
     public void testChessboardFromFEN() {
         assertThrows(IllegalFENException.class,
-                () -> FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", true),
+                () -> FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"),
                 "Should throw on missing turn.");
 
         assertThrows(IllegalFENException.class,
-                () -> FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", true),
+                () -> FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
                 "Should throw on illegal board.");
 
         assertDoesNotThrow(
-                () -> board = FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-                        true),
+                () -> board = FENParser.getBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
                 "Should not throw on default start.");
 
         assertEquals(board.getFEN(), defaultFENString, "Should be the same FEN-string.");

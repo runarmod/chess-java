@@ -25,32 +25,10 @@ import sjakk.utils.PopUp;
  * @see Player
  */
 public class ChessBoard implements Iterable<Piece> {
-    private static Image allPiecesImg;
-    private final static Map<String, Integer> imgColIdx = Map.of("King", 0, "Queen", 1, "Bishop", 2, "Knight", 3,
-            "Rook", 4,
-            "Pawn", 5);
 
-    /**
-     * Get the image containing all the pieces.
-     * 
-     * @return the image containing all the pieces
-     */
-    public static Image getAllPiecesImg() {
-        return allPiecesImg;
-    }
-
-    /**
-     * Get the coloumn-index of the image containing all the pieces.
-     */
-    public static int getPieceImageIndex(String pieceType) {
-        return imgColIdx.get(pieceType);
-    }
-
-    private ArrayList<ArrayList<Color>> gridBackgroundColor;
     private ArrayList<ArrayList<Piece>> board;
     private ArrayList<String> moves = new ArrayList<String>();
     private Piece selectedPiece;
-    private boolean test = false;
     private Piece lastMovedPiece;
     private Player white;
     private Player black;
@@ -61,12 +39,6 @@ public class ChessBoard implements Iterable<Piece> {
     private String gameMessage = "";
 
     public ChessBoard(Player white, Player black) {
-        this(false, white, black);
-    }
-
-    public ChessBoard(boolean test, Player white, Player black) {
-        this.test = test;
-
         board = new ArrayList<ArrayList<Piece>>();
         for (int i = 0; i < 8; i++) {
             board.add(new ArrayList<Piece>());
@@ -83,76 +55,6 @@ public class ChessBoard implements Iterable<Piece> {
             this.black = new Player(PieceColor.BLACK);
 
         turn = white;
-
-        resetGridBackgroundMatrix();
-
-        if (!test)
-            allPiecesImg = new Image(getClass().getResource("pieces.png").toString());
-
-    }
-
-    public void resetGridBackgroundMatrix() {
-        gridBackgroundColor = new ArrayList<ArrayList<Color>>();
-        for (int i = 0; i < 8; i++) {
-            gridBackgroundColor.add(new ArrayList<Color>());
-            for (int j = 0; j < 8; j++) {
-                gridBackgroundColor.get(i).add((i + j) % 2 == 0 ? Color.GRAY : Color.WHITE);
-            }
-        }
-    }
-
-    public boolean isTest() {
-        return test;
-    }
-
-    /**
-     * Handle a click on a position on the board. Possible results are:
-     * <ol>
-     * <li>
-     * No piece is selected. Select the piece at the position if it exists.
-     * </li>
-     * <li>
-     * A piece is selected. If the new position is a valid move for the selected
-     * piece, move the piece.
-     * </li>
-     * <li>
-     * A piece is selected. If the new position is not a valid move for the
-     * selected piece, deselect the piece.
-     * </li>
-     * </ol>
-     * 
-     * @param position The position that was clicked.
-     */
-    public void positionPressed(Position position) {
-        if (gameFinished)
-            return;
-        resetGridBackgroundMatrix();
-        if (selectedPiece == null) {
-            selectedPiece = getPosition(position);
-            // If the selected piece is not the correct color, deselect it.
-            if (selectedPiece != null && selectedPiece.getOwner() != turn) {
-                selectedPiece = null;
-                return;
-            }
-            if (selectedPiece != null) {
-                setGridBackgroundColor(position.getX(), position.getY(), Color.YELLOW);
-                selectedPiece.setLegalMovesBackground();
-            }
-            return;
-        }
-
-        if (turn != selectedPiece.getOwner())
-            return;
-
-        try {
-            selectedPiece.move(position);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid move");
-            selectedPiece = null;
-            return;
-        }
-
-        selectedPiece = null;
     }
 
     public boolean isValidMove(Piece piece, Position position) {
@@ -408,14 +310,6 @@ public class ChessBoard implements Iterable<Piece> {
         return new ChessBoardIterator(this);
     }
 
-    public Color getGridBackgroundColor(int x, int y) {
-        return gridBackgroundColor.get(y).get(x);
-    }
-
-    public void setGridBackgroundColor(int x, int y, Color color) {
-        gridBackgroundColor.get(y).set(x, color);
-    }
-
     public Piece getLastPieceMoved() {
         return lastMovedPiece;
     }
@@ -491,5 +385,13 @@ public class ChessBoard implements Iterable<Piece> {
 
     public String getGameMessage() {
         return gameMessage;
+    }
+
+    public void setSelectedPiece(Piece piece) {
+        selectedPiece = piece;
+    }
+
+    public Piece getSelectedPiece() {
+        return selectedPiece;
     }
 }
