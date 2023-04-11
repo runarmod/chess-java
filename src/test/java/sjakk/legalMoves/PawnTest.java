@@ -1,5 +1,7 @@
 package sjakk.legalMoves;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import sjakk.Position;
 import sjakk.pieces.*;
+import sjakk.utils.FENParser;
 
 public class PawnTest extends PieceTest {
     @Test
@@ -22,8 +25,11 @@ public class PawnTest extends PieceTest {
 
     @Test
     public void testPawnNotFirstMove() {
-        Pawn pawn = new Pawn(new Position(4, 2), board, whitePlayer);
-        pawn.move(new Position(4, 3));
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("8/8/8/8/8/4P3/8/k1K5 b - - 0 1"),
+                "Should not throw on legal FEN-string.");
+
+        Piece pawn = board.getPosition(new Position(4, 2));
+        assertDoesNotThrow(() -> pawn.move(new Position(4, 3)), "Move is legal, so it should not be thrown.");
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(4, 4));
@@ -33,8 +39,9 @@ public class PawnTest extends PieceTest {
 
     @Test
     public void testPawnBlockingPieceFirstMove() {
-        Pawn pawn = new Pawn(new Position(4, 1), board, whitePlayer);
-        Piece blockingPiece = new Rook(new Position(4, 2), board, whitePlayer);
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("8/8/8/8/8/4R3/4P3/k1K5 w - - 0 1"),
+                "Should not throw on legal FEN-string.");
+        Piece pawn = board.getPosition(new Position(4, 1));
 
         Collection<Position> actualLegal = new ArrayList<Position>();
 
@@ -43,8 +50,9 @@ public class PawnTest extends PieceTest {
 
     @Test
     public void testPawnTakePiece() {
-        Pawn pawn = new Pawn(new Position(4, 3), board, whitePlayer);
-        Piece blockingPiece = new Rook(new Position(5, 4), board, blackPlayer);
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("8/8/8/5r2/4P3/8/8/K1k5 w - - 0 1"),
+                "Should not throw on legal FEN-string.");
+        Piece pawn = new Pawn(new Position(4, 3), board, whitePlayer);
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(5, 4));

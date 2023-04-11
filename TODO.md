@@ -8,7 +8,7 @@
 - [x] Fix en passant
 - [x] Fix mate
 - [x] Fix castling
-- [ ] Bruk FEN i tests
+- [x] Bruk FEN i tests
 
 
 ## Features

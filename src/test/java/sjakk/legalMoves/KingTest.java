@@ -1,5 +1,6 @@
 package sjakk.legalMoves;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import sjakk.Position;
 import sjakk.pieces.*;
+import sjakk.utils.FENParser;
 
 public class KingTest extends PieceTest {
     @Test
@@ -31,10 +33,9 @@ public class KingTest extends PieceTest {
 
     @Test
     public void testKing() {
-        King king = new King(new Position(6, 5), board, whitePlayer);
-        Piece blockingPiece = new Knight(new Position(5, 6), board, whitePlayer);
-        Piece captureAndThreateningPiece = new Knight(new Position(6, 6), board, blackPlayer);
-        Piece threateningPiece = new Knight(new Position(4, 2), board, blackPlayer);
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("8/5Nn1/6K1/8/8/4n3/8/8 w KQkq - 0 1"),
+                "Should not throw on legal FEN-string.");
+        Piece king = board.getPosition(new Position(6, 5));
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(5, 5));
@@ -48,9 +49,11 @@ public class KingTest extends PieceTest {
 
     @Test
     public void testKingCastling() {
-        King king = new King(new Position(4, 0), board, whitePlayer);
-        Rook rookQueenSide = new Rook(new Position(0, 0), board, whitePlayer);
-        Rook rookKingSide = new Rook(new Position(7, 0), board, whitePlayer);
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("k7/8/8/8/8/8/8/R3K2R w KQ - 0 1"),
+                "Should not throw on legal FEN-string.");
+
+        Piece king = board.getPosition(new Position(4, 0));
+        Piece rookQueenSide = board.getPosition(new Position(0, 0));
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(2, 0));
@@ -71,11 +74,9 @@ public class KingTest extends PieceTest {
 
     @Test
     public void testKingCastlingPassThroughCheck() {
-        King king = new King(new Position(4, 0), board, whitePlayer);
-        Rook rookKingSide = new Rook(new Position(7, 0), board, whitePlayer);
-        Rook rookQueenSide = new Rook(new Position(0, 0), board, whitePlayer);
-
-        Rook threateningRook = new Rook(new Position(3, 7), board, blackPlayer);
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("3r3k/8/8/8/8/8/8/R3K2R w KQ - 0 1"),
+                "Should not throw on legal FEN-string.");
+        Piece king = board.getPosition(new Position(4, 0));
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         actualLegal.add(new Position(5, 0));

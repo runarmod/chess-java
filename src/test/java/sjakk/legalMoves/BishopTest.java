@@ -1,5 +1,7 @@
 package sjakk.legalMoves;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import sjakk.Position;
 import sjakk.pieces.*;
+import sjakk.utils.FENParser;
 
 public class BishopTest extends PieceTest {
     @Test
@@ -35,12 +38,9 @@ public class BishopTest extends PieceTest {
 
     @Test
     public void testBishopBlockingPiece() {
-        Bishop bishop = new Bishop(new Position(6, 4), board, whitePlayer);
-        Rook blockingPiece = new Rook(new Position(4, 6), board, whitePlayer);
-        Rook capturePiece = new Rook(new Position(3, 1), board, blackPlayer);
-
-        board.setPosition(new Position(4, 6), blockingPiece);
-        board.setPosition(new Position(3, 1), capturePiece);
+        assertDoesNotThrow(() -> board = FENParser.getBoardFromFEN("8/4R3/8/6B1/8/8/3r4/K1k5 w - - 0 1"),
+                "Should not throw on legal FEN-string.");
+        Piece bishop = board.getPosition(new Position(6, 4));
 
         Collection<Position> actualLegal = new ArrayList<Position>();
         // Diagonal down right
