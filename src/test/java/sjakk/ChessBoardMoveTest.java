@@ -37,7 +37,7 @@ public class ChessBoardMoveTest {
         assertFalse(board.getGameFinished(), "Game is not finished.");
 
         board.getPosition(new Position(4, 0)).move(new Position(2, 0));
-
+        System.out.println(board);
         assertEquals("7k/8/8/8/8/8/8/2KR4 b - - 1 1", board.getFEN(),
                 "Game position is not correct after castling.");
     }

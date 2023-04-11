@@ -125,6 +125,9 @@ public class ChessBoard implements Iterable<Piece> {
      *                 king which moves.
      */
     public void move(Piece piece, Position to, boolean isCastle) {
+        if (!piece.isValidMove(to) && !isCastle)
+            throw new IllegalArgumentException("Invalid move");
+
         Position originalPos = piece.getPos();
         boolean pieceWasCaptured = (getPosition(to) != null);
 
