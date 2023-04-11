@@ -31,7 +31,7 @@ public class ChessBoard implements Iterable<Piece> {
     private Player black;
     private Player turn;
     private int halfMoves = 0;
-    private int fullMoves = 0;
+    private int fullMoves = 1;
     private boolean gameFinished = false;
     private String gameMessage = "";
 
@@ -313,7 +313,7 @@ public class ChessBoard implements Iterable<Piece> {
 
     @Override
     public String toString() {
-        return "ChessBoard [board=" + board + "]";
+        return "ChessBoard [board=" + FENParser.generateFEN(this) + "]";
     }
 
     public void setTurn(PieceColor color) {
