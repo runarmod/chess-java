@@ -2,9 +2,7 @@ package sjakk.pieces;
 
 import java.util.Collection;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import sjakk.ChessBoard;
 import sjakk.Player;
 import sjakk.Position;

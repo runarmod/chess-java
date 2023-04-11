@@ -4,12 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import sjakk.controllers.UpgradePawnController;
 import sjakk.pieces.*;
 import sjakk.utils.FENParser;
