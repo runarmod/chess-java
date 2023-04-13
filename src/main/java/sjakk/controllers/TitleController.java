@@ -10,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import sjakk.utils.FENParser;
+import sjakk.utils.PopUp;
 
 public class TitleController extends SceneSwitcher {
 
@@ -54,11 +56,17 @@ public class TitleController extends SceneSwitcher {
     @FXML
     private void loadGameFromFile() {
         File file = FENParser.getFileFromChooser();
+        if (file == null) {
+            // Did not select a file
+            return;
+        }
         try {
             String FENString = FENParser.readFENFromFile(file);
             insertPane("App.fxml", baseAnchor, new ChessGameController(FENString));
         } catch (FileNotFoundException e) {
-            // TODO: Pop up with info about file not found
+            PopUp popup = new PopUp("Did not find file", true);
+            popup.addNode(new Text("Did not find file"));
+            popup.display();
         }
     }
 }
