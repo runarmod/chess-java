@@ -89,50 +89,6 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     /**
-     * Disables castling for the player if the king or rook has moved. If king
-     * moves, both sides are disabled. If rook moves, only the side the rook started
-     * on is disabled.
-     * 
-     * @param piece       The piece that moved.
-     * @param originalPos The position the piece moved from.
-     */
-    private void handleCastlingDisabling(Piece piece, Position originalPos) {
-        if (piece instanceof King) {
-            piece.getOwner().disableCastling();
-            return;
-        }
-        if (!(piece instanceof Rook))
-            return;
-
-        if (piece.getMoveCount() != 0) {
-            return;
-        }
-
-        if (originalPos.getX() == 7) {
-            piece.getOwner().setCastling(false, false);
-        } else if (originalPos.getX() == 0) {
-            piece.getOwner().setCastling(false, true);
-        }
-    }
-
-    /**
-     * If the piece is a pawn that has made an en passant, the pawn that was
-     * captured is removed from the board.
-     * 
-     * @param piece The piece that moved.
-     * @return whether an en passant was made.
-     */
-    private boolean handleEnPassantMove(Piece piece) {
-        if (piece instanceof Pawn && ((Pawn) piece).getHasMadeEnPassant()) {
-            System.out.println("Pawn has made an passant");
-            Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
-            setPosition(pos, null);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Moves a piece to a new position. Updates the information on the board and for
      * the pieces.
      * 
@@ -183,143 +139,6 @@ public class ChessBoard implements Iterable<Piece> {
      */
     public void move(Piece piece, Position to) {
         move(piece, to, false);
-    }
-
-    /**
-     * Promote a pawn to a new piece.
-     * 
-     * @param piece The pawn to promote.
-     */
-    private void promotePawn(Pawn piece) {
-        Piece newPiece;
-        try {
-            URL url = getClass().getResource("/sjakk/UpgradePawn.fxml");
-            FXMLLoader loader = new FXMLLoader(url);
-            loader.setController(new UpgradePawnController());
-
-            Node node = loader.load();
-            PopUp popUp = new PopUp("Promote pawn", false);
-            popUp.addNode(node);
-            popUp.display();
-            switch (UpgradePawnController.getUpgradeChoice()) {
-                case "rook":
-                    newPiece = new Rook(piece.getPos(), this, piece.getOwner());
-                    break;
-                case "bishop":
-                    newPiece = new Bishop(piece.getPos(), this, piece.getOwner());
-                    break;
-                case "knight":
-                    newPiece = new Knight(piece.getPos(), this, piece.getOwner());
-                    break;
-                case "queen":
-                default:
-                    newPiece = new Queen(piece.getPos(), this, piece.getOwner());
-                    break;
-            }
-
-        } catch (IOException e) {
-            System.out.println("Could not load fxml file, using queen as default promotion");
-            newPiece = new Queen(piece.getPos(), this, piece.getOwner());
-        }
-        setPosition(piece.getPos(), newPiece);
-    }
-
-    /**
-     * Handles the half move counter. If the piece is black, the counter is
-     * incremented.
-     * 
-     * @param piece The piece that moved. (Used to get the owner)
-     */
-    private void handleHalfMove(Piece piece) {
-        if (!piece.getOwner().isWhite()) {
-            fullMoves++;
-        }
-    }
-
-    /**
-     * Handles the full move counter. If the piece is a pawn or a piece was
-     * captured, the counter increments. Otherwise, it resets to 0.
-     * 
-     * @param piece            The piece that moved.
-     * @param pieceWasCaptured Whether a piece was captured.
-     */
-    private void handleFullMove(Piece piece, boolean pieceWasCaptured) {
-        if (!(piece instanceof Pawn || pieceWasCaptured)) {
-            halfMoves++;
-        } else {
-            halfMoves = 0;
-        }
-    }
-
-    /**
-     * Checks if the game is finished. If it is, the gameMessage is updated.
-     */
-    private void checkGameFinished() {
-        if (gameFinished)
-            return;
-
-        if (inCheckmate(turn)) {
-            gameFinished = true;
-            gameMessage = turn + " got checkmated.";
-        } else if (inStalemate(turn)) {
-            gameFinished = true;
-            gameMessage = turn + " got stalemated. Draw!";
-        } else if (inDraw()) {
-            gameFinished = true;
-            gameMessage = "The game resultet in draw.";
-        }
-    }
-
-    /**
-     * Checks if the game is in a state of draw.
-     * 
-     * @return whether the game is a draw.
-     */
-    private boolean inDraw() {
-        if (halfMoves >= 50)
-            return true;
-
-        return false;
-    }
-
-    /**
-     * Checks if the player is in stalemate.
-     * 
-     * @param player The player to check.
-     * @return {@code true} if the player is in stalemate, {@code false} otherwise.
-     */
-    private boolean inStalemate(Player player) {
-        if (inCheck(player))
-            return false;
-        for (Piece piece : this) {
-            if (piece.getOwner() == player) {
-                for (Position pos : piece.getLegalMoves()) {
-                    if (piece.isValidMove(pos))
-                        return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Checks if the player is in checkmate.
-     * 
-     * @param player The player to check.
-     * @return {@code true} if the player is in checkmate, {@code false} otherwise.
-     */
-    private boolean inCheckmate(Player player) {
-        if (!inCheck(player))
-            return false;
-        for (Piece piece : this) {
-            if (piece.getOwner() == player) {
-                for (Position pos : piece.getLegalMoves()) {
-                    if (piece.isValidMove(pos))
-                        return false;
-                }
-            }
-        }
-        return true;
     }
 
     /**
@@ -516,5 +335,186 @@ public class ChessBoard implements Iterable<Piece> {
      */
     public Piece getSelectedPiece() {
         return selectedPiece;
+    }
+
+    /**
+     * Disables castling for the player if the king or rook has moved. If king
+     * moves, both sides are disabled. If rook moves, only the side the rook started
+     * on is disabled.
+     * 
+     * @param piece       The piece that moved.
+     * @param originalPos The position the piece moved from.
+     */
+    private void handleCastlingDisabling(Piece piece, Position originalPos) {
+        if (piece instanceof King) {
+            piece.getOwner().disableCastling();
+            return;
+        }
+        if (!(piece instanceof Rook))
+            return;
+
+        if (piece.getMoveCount() != 0) {
+            return;
+        }
+
+        if (originalPos.getX() == 7) {
+            piece.getOwner().setCastling(false, false);
+        } else if (originalPos.getX() == 0) {
+            piece.getOwner().setCastling(false, true);
+        }
+    }
+
+    /**
+     * If the piece is a pawn that has made an en passant, the pawn that was
+     * captured is removed from the board.
+     * 
+     * @param piece The piece that moved.
+     * @return whether an en passant was made.
+     */
+    private boolean handleEnPassantMove(Piece piece) {
+        if (piece instanceof Pawn && ((Pawn) piece).getHasMadeEnPassant()) {
+            System.out.println("Pawn has made an passant");
+            Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
+            setPosition(pos, null);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Promote a pawn to a new piece.
+     * 
+     * @param piece The pawn to promote.
+     */
+    private void promotePawn(Pawn piece) {
+        Piece newPiece;
+        try {
+            URL url = getClass().getResource("/sjakk/UpgradePawn.fxml");
+            FXMLLoader loader = new FXMLLoader(url);
+            loader.setController(new UpgradePawnController());
+
+            Node node = loader.load();
+            PopUp popUp = new PopUp("Promote pawn", false);
+            popUp.addNode(node);
+            popUp.display();
+            switch (UpgradePawnController.getUpgradeChoice()) {
+                case "rook":
+                    newPiece = new Rook(piece.getPos(), this, piece.getOwner());
+                    break;
+                case "bishop":
+                    newPiece = new Bishop(piece.getPos(), this, piece.getOwner());
+                    break;
+                case "knight":
+                    newPiece = new Knight(piece.getPos(), this, piece.getOwner());
+                    break;
+                case "queen":
+                default:
+                    newPiece = new Queen(piece.getPos(), this, piece.getOwner());
+                    break;
+            }
+
+        } catch (IOException e) {
+            System.out.println("Could not load fxml file, using queen as default promotion");
+            newPiece = new Queen(piece.getPos(), this, piece.getOwner());
+        }
+        setPosition(piece.getPos(), newPiece);
+    }
+
+    /**
+     * Handles the half move counter. If the piece is black, the counter is
+     * incremented.
+     * 
+     * @param piece The piece that moved. (Used to get the owner)
+     */
+    private void handleHalfMove(Piece piece) {
+        if (!piece.getOwner().isWhite()) {
+            fullMoves++;
+        }
+    }
+
+    /**
+     * Handles the full move counter. If the piece is a pawn or a piece was
+     * captured, the counter increments. Otherwise, it resets to 0.
+     * 
+     * @param piece            The piece that moved.
+     * @param pieceWasCaptured Whether a piece was captured.
+     */
+    private void handleFullMove(Piece piece, boolean pieceWasCaptured) {
+        if (!(piece instanceof Pawn || pieceWasCaptured)) {
+            halfMoves++;
+        } else {
+            halfMoves = 0;
+        }
+    }
+
+    /**
+     * Checks if the game is finished. If it is, the gameMessage is updated.
+     */
+    private void checkGameFinished() {
+        if (gameFinished)
+            return;
+
+        if (inCheckmate(turn)) {
+            gameFinished = true;
+            gameMessage = turn + " got checkmated.";
+        } else if (inStalemate(turn)) {
+            gameFinished = true;
+            gameMessage = turn + " got stalemated. Draw!";
+        } else if (inDraw()) {
+            gameFinished = true;
+            gameMessage = "The game resultet in draw.";
+        }
+    }
+
+    /**
+     * Checks if the game is in a state of draw.
+     * 
+     * @return whether the game is a draw.
+     */
+    private boolean inDraw() {
+        if (halfMoves >= 50)
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Checks if the player is in stalemate.
+     * 
+     * @param player The player to check.
+     * @return {@code true} if the player is in stalemate, {@code false} otherwise.
+     */
+    private boolean inStalemate(Player player) {
+        if (inCheck(player))
+            return false;
+        for (Piece piece : this) {
+            if (piece.getOwner() == player) {
+                for (Position pos : piece.getLegalMoves()) {
+                    if (piece.isValidMove(pos))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the player is in checkmate.
+     * 
+     * @param player The player to check.
+     * @return {@code true} if the player is in checkmate, {@code false} otherwise.
+     */
+    private boolean inCheckmate(Player player) {
+        if (!inCheck(player))
+            return false;
+        for (Piece piece : this) {
+            if (piece.getOwner() == player) {
+                for (Position pos : piece.getLegalMoves()) {
+                    if (piece.isValidMove(pos))
+                        return false;
+                }
+            }
+        }
+        return true;
     }
 }
