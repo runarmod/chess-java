@@ -9,13 +9,6 @@
             "name": "App",
             "request": "launch",
             "mainClass": "TDT4100_project/sjakk.App",
-            "projectName": "tdt4100_v2023_prosjekt_boilerplate"
-        },
-        {
-            "type": "java",
-            "name": "App",
-            "request": "launch",
-            "mainClass": "TDT4100_project/sjakk.App",
             "projectName": "tdt4100_v2023_prosjekt_sjakk"
         }
     ]
