@@ -1,16 +1,10 @@
 package sjakk;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import sjakk.controllers.UpgradePawnController;
 import sjakk.pieces.*;
 import sjakk.utils.FENParser;
-import sjakk.utils.PopUp;
 
 /**
  * This class represents the chess board. It contains a 2D array of pieces, and
@@ -32,6 +26,7 @@ public class ChessBoard implements Iterable<Piece> {
     private int fullMoves = 1;
     private boolean gameFinished = false;
     private String gameMessage = "";
+    private Pawn upgradablePawn = null;
 
     /**
      * Creates a new chess board with two new players.
@@ -124,7 +119,7 @@ public class ChessBoard implements Iterable<Piece> {
         }
 
         if (piece instanceof Pawn && (to.getY() == 0 || to.getY() == 7)) {
-            promotePawn((Pawn) piece);
+            setPromotePawn((Pawn) piece);
         }
 
         checkGameFinished();
@@ -382,42 +377,18 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     /**
-     * Promote a pawn to a new piece.
+     * Selects the pawn that should be upgraded.
      * 
      * @param piece The pawn to promote.
      */
-    private void promotePawn(Pawn piece) {
-        Piece newPiece;
-        try {
-            final URL url = getClass().getResource("/sjakk/UpgradePawn.fxml");
-            final FXMLLoader loader = new FXMLLoader(url);
-            loader.setController(new UpgradePawnController());
+    private void setPromotePawn(Pawn piece) {
+        this.upgradablePawn = piece;
+    }
 
-            final Node node = loader.load();
-            final PopUp popUp = new PopUp("Promote pawn", false);
-            popUp.addNode(node);
-            popUp.display();
-            switch (UpgradePawnController.getUpgradeChoice()) {
-                case "rook":
-                    newPiece = new Rook(piece.getPos(), this, piece.getOwner());
-                    break;
-                case "bishop":
-                    newPiece = new Bishop(piece.getPos(), this, piece.getOwner());
-                    break;
-                case "knight":
-                    newPiece = new Knight(piece.getPos(), this, piece.getOwner());
-                    break;
-                case "queen":
-                default:
-                    newPiece = new Queen(piece.getPos(), this, piece.getOwner());
-                    break;
-            }
-
-        } catch (IOException e) {
-            System.out.println("Could not load fxml file, using queen as default promotion");
-            newPiece = new Queen(piece.getPos(), this, piece.getOwner());
-        }
-        setPosition(piece.getPos(), newPiece);
+    public void promotePawn(Pawn piece, Piece upgrade) {
+        setPosition(piece.getPos(), upgrade);
+        checkGameFinished();
+        this.upgradablePawn = null;
     }
 
     /**
@@ -516,5 +487,9 @@ public class ChessBoard implements Iterable<Piece> {
             }
         }
         return true;
+    }
+
+    public Pawn getUpgradablePawn() {
+        return this.upgradablePawn;
     }
 }

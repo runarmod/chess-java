@@ -1,11 +1,13 @@
 package sjakk.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,7 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import sjakk.ChessBoard;
 import sjakk.Position;
-import sjakk.pieces.Piece;
+import sjakk.pieces.*;
 import sjakk.utils.FENParser;
 import sjakk.utils.IllegalFENException;
 import sjakk.utils.PopUp;
@@ -80,6 +82,7 @@ public class ChessGameController extends SceneSwitcher {
             System.out.println("Could not read FEN, using default");
             System.out.println(e.getMessage());
         }
+        hasShownGameOver = false;
         allPiecesImg = new Image(ChessBoard.class.getResource("images/pieces.png").toString());
         drawBoard();
     }
@@ -189,6 +192,57 @@ public class ChessGameController extends SceneSwitcher {
         }
 
         chessboard.setSelectedPiece(null);
+        checkPawnPromotion();
+    }
+
+    /**
+     * Checks if a pawn should be upgraded. If it should, it will be.
+     */
+    private void checkPawnPromotion() {
+        Pawn pawn = chessboard.getUpgradablePawn();
+        if (pawn != null) {
+            promotePawn(pawn);
+        }
+    }
+
+    /**
+     * Create a popup to promote a pawn.
+     * 
+     * @param piece The pawn to promote.
+     */
+    private void promotePawn(Pawn piece) {
+        Piece newPiece;
+        try {
+            final URL url = getClass().getResource("/sjakk/UpgradePawn.fxml");
+            final FXMLLoader loader = new FXMLLoader(url);
+            loader.setController(new UpgradePawnController());
+
+            final Node node = loader.load();
+            final PopUp popUp = new PopUp("Promote pawn", false);
+            popUp.addNode(node);
+            popUp.display();
+            switch (UpgradePawnController.getUpgradeChoice()) {
+                case "rook":
+                    newPiece = new Rook(piece.getPos(), chessboard, piece.getOwner());
+                    break;
+                case "bishop":
+                    newPiece = new Bishop(piece.getPos(), chessboard, piece.getOwner());
+                    break;
+                case "knight":
+                    newPiece = new Knight(piece.getPos(), chessboard, piece.getOwner());
+                    break;
+                case "queen":
+                default:
+                    newPiece = new Queen(piece.getPos(), chessboard, piece.getOwner());
+                    break;
+            }
+
+        } catch (IOException e) {
+            System.out.println("Could not load fxml file, using queen as default promotion");
+            newPiece = new Queen(piece.getPos(), chessboard, piece.getOwner());
+        }
+
+        chessboard.promotePawn(piece, newPiece);
     }
 
     /**
