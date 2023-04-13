@@ -18,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setTitle("Super sjakk");
+        primaryStage.setTitle("Super chess");
 
         FXMLLoader titleLoader = new FXMLLoader(getClass().getResource("TitleScreen.fxml"));
         titleLoader.setController(new TitleController());

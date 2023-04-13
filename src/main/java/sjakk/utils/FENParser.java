@@ -94,16 +94,16 @@ public abstract class FENParser {
         for (final char c : data[2].toCharArray()) {
             switch (c) {
                 case 'K':
-                    board.setWhiteKingSideCastle(true);
+                    white.setCastling(true, false);
                     break;
                 case 'Q':
-                    board.setWhiteQueenSideCastle(true);
+                    white.setCastling(true, true);
                     break;
                 case 'k':
-                    board.setBlackKingSideCastle(true);
+                    black.setCastling(true, false);
                     break;
                 case 'q':
-                    board.setBlackQueenSideCastle(true);
+                    black.setCastling(true, true);
                     break;
             }
         }

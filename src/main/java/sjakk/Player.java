@@ -53,7 +53,8 @@ public class Player {
 
     @Override
     public String toString() {
-        // return "Player [color=" + color + ", time=" + time + ", hasTurn=" + hasTurn + "]";
+        // return "Player [color=" + color + ", time=" + time + ", hasTurn=" + hasTurn +
+        // "]";
         return (color ? "White" : "Black");
     }
 
@@ -77,17 +78,17 @@ public class Player {
         return canCastleQueenSide;
     }
 
-    public void setCastlingKingSide(boolean value) {
-        this.canCastleKingSide = value;
-    }
-
-    public void setCastlingQueenSide(boolean value) {
-        this.canCastleQueenSide = value;
+    public void setCastling(boolean value, boolean queenSide) {
+        if (queenSide) {
+            this.canCastleQueenSide = value;
+        } else {
+            this.canCastleKingSide = value;
+        }
     }
 
     public void disableCastling() {
-        setCastlingKingSide(false);
-        setCastlingQueenSide(false);
+        setCastling(false, true);
+        setCastling(false, false);
     }
 
     public String getCastlingRights() {

@@ -16,8 +16,6 @@ import sjakk.utils.PopUp;
  * This class represents the chess board. It contains a 2D array of pieces, and
  * have all sorts methods to use.
  * 
- * @author Runar Saur Modahl
- * @version 1.0
  * @see Piece
  * @see Player
  */
@@ -35,6 +33,16 @@ public class ChessBoard implements Iterable<Piece> {
     private boolean gameFinished = false;
     private String gameMessage = "";
 
+    /**
+     * Creates a new chess board with two new players.
+     */
+    public ChessBoard() {
+        this(new Player(PieceColor.WHITE), new Player(PieceColor.BLACK));
+    }
+
+    /**
+     * Creates a new chess board with the two given players.
+     */
     public ChessBoard(Player white, Player black) {
         board = new ArrayList<ArrayList<Piece>>();
         for (int i = 0; i < 8; i++) {
@@ -43,6 +51,7 @@ public class ChessBoard implements Iterable<Piece> {
                 board.get(i).add(null);
             }
         }
+
         this.white = white;
         this.black = black;
 
@@ -54,16 +63,25 @@ public class ChessBoard implements Iterable<Piece> {
         turn = white;
     }
 
-    public boolean isValidMove(Piece piece, Position position) {
-        return piece.isValidMove(position);
-    }
-
+    /**
+     * Gets the piece at the given position.
+     * 
+     * @param position The position to get the piece from.
+     * @return The piece at the given position, or null if the position is out of
+     *         bounds.
+     */
     public Piece getPosition(Position position) {
         if (position.getX() < 0 || position.getX() > 7 || position.getY() < 0 || position.getY() > 7)
             return null;
         return board.get(position.getY()).get(position.getX());
     }
 
+    /**
+     * Sets the piece at the given position.
+     * 
+     * @param position The position to set the piece at.
+     * @param piece    The piece to set at the given position.
+     */
     public void setPosition(Position position, Piece piece) {
         if (getPosition(position) == piece)
             return;
@@ -91,9 +109,9 @@ public class ChessBoard implements Iterable<Piece> {
         }
 
         if (originalPos.getX() == 7) {
-            piece.getOwner().setCastlingKingSide(false);
+            piece.getOwner().setCastling(false, false);
         } else if (originalPos.getX() == 0) {
-            piece.getOwner().setCastlingQueenSide(false);
+            piece.getOwner().setCastling(false, true);
         }
     }
 
@@ -167,6 +185,11 @@ public class ChessBoard implements Iterable<Piece> {
         move(piece, to, false);
     }
 
+    /**
+     * Promote a pawn to a new piece.
+     * 
+     * @param piece The pawn to promote.
+     */
     private void promotePawn(Pawn piece) {
         Piece newPiece;
         try {
@@ -201,12 +224,25 @@ public class ChessBoard implements Iterable<Piece> {
         setPosition(piece.getPos(), newPiece);
     }
 
+    /**
+     * Handles the half move counter. If the piece is black, the counter is
+     * incremented.
+     * 
+     * @param piece The piece that moved. (Used to get the owner)
+     */
     private void handleHalfMove(Piece piece) {
         if (!piece.getOwner().isWhite()) {
             fullMoves++;
         }
     }
 
+    /**
+     * Handles the full move counter. If the piece is a pawn or a piece was
+     * captured, the counter increments. Otherwise, it resets to 0.
+     * 
+     * @param piece            The piece that moved.
+     * @param pieceWasCaptured Whether a piece was captured.
+     */
     private void handleFullMove(Piece piece, boolean pieceWasCaptured) {
         if (!(piece instanceof Pawn || pieceWasCaptured)) {
             halfMoves++;
@@ -215,25 +251,30 @@ public class ChessBoard implements Iterable<Piece> {
         }
     }
 
+    /**
+     * Checks if the game is finished. If it is, the gameMessage is updated.
+     */
     private void checkGameFinished() {
         if (gameFinished)
             return;
 
         if (inCheckmate(turn)) {
-            System.out.println("Checkmate");
             gameFinished = true;
             gameMessage = turn + " got checkmated.";
         } else if (inStalemate(turn)) {
-            System.out.println("Stalemate");
             gameFinished = true;
             gameMessage = turn + " got stalemated. Draw!";
         } else if (inDraw()) {
-            System.out.println("Draw");
             gameFinished = true;
             gameMessage = "The game resultet in draw.";
         }
     }
 
+    /**
+     * Checks if the game is in a state of draw.
+     * 
+     * @return whether the game is a draw.
+     */
     private boolean inDraw() {
         if (halfMoves >= 50)
             return true;
@@ -241,6 +282,12 @@ public class ChessBoard implements Iterable<Piece> {
         return false;
     }
 
+    /**
+     * Checks if the player is in stalemate.
+     * 
+     * @param player The player to check.
+     * @return {@code true} if the player is in stalemate, {@code false} otherwise.
+     */
     private boolean inStalemate(Player player) {
         if (inCheck(player))
             return false;
@@ -252,10 +299,15 @@ public class ChessBoard implements Iterable<Piece> {
                 }
             }
         }
-
         return true;
     }
 
+    /**
+     * Checks if the player is in checkmate.
+     * 
+     * @param player The player to check.
+     * @return {@code true} if the player is in checkmate, {@code false} otherwise.
+     */
     private boolean inCheckmate(Player player) {
         if (!inCheck(player))
             return false;
@@ -287,8 +339,10 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     /**
-     * Gets the moves made in the game in string format (example {@code "e2e4
-     * e7e5\n d2d3"}).
+     * Gets the moves made in the game in string format (example
+     * {@code "e2e4 | e7e5\n d2d3 | ..."}).
+     * 
+     * @return The moves made in the game.
      */
     public String getMoves() {
         String movesString = "";
@@ -305,49 +359,64 @@ public class ChessBoard implements Iterable<Piece> {
         return movesString;
     }
 
+    /**
+     * Gets an iterator for the chess board.
+     * 
+     * @return An iterator for the chess board.
+     */
     @Override
     public Iterator<Piece> iterator() {
         return new ChessBoardIterator(this);
     }
 
+    /**
+     * Gets the piece which moved last.
+     * 
+     * @return The piece which moved last.
+     */
     public Piece getLastPieceMoved() {
         return lastMovedPiece;
     }
 
+    /**
+     * Gets the string representation of the chess board.
+     */
     @Override
     public String toString() {
         return "ChessBoard [board=" + FENParser.generateFEN(this) + "]";
     }
 
+    /**
+     * Sets the turn to the given color.
+     * 
+     * @param color The color to set the turn to.
+     */
     public void setTurn(PieceColor color) {
         this.turn = (color == PieceColor.WHITE ? white : black);
     }
 
+    /**
+     * Sets the last piece moved.
+     * 
+     * @param piece The piece to set as last moved.
+     */
     public void setLastPieceMoved(Piece piece) {
         this.lastMovedPiece = piece;
     }
 
+    /**
+     * Disables castling for both players.
+     */
     public void disableCastling() {
         white.disableCastling();
         black.disableCastling();
     }
 
-    public void setWhiteKingSideCastle(boolean b) {
-        white.setCastlingKingSide(b);
-    }
-
-    public void setWhiteQueenSideCastle(boolean b) {
-        white.setCastlingQueenSide(b);
-    }
-
-    public void setBlackKingSideCastle(boolean b) {
-        black.setCastlingKingSide(b);
-    }
-
-    public void setBlackQueenSideCastle(boolean b) {
-        black.setCastlingQueenSide(b);
-    }
-
+    /**
+     * Gets the castling rights for both players.
+     * 
+     * @return The castling rights for both players.
+     */
     public String getCastlingRights() {
         String rights = white.getCastlingRights() + black.getCastlingRights();
         if (rights.length() == 0)
@@ -355,42 +424,96 @@ public class ChessBoard implements Iterable<Piece> {
         return rights;
     }
 
+    /**
+     * Gets the FEN representation of the chess board.
+     * 
+     * @return The FEN representation of the chess board.
+     */
     public String getFEN() {
         return FENParser.generateFEN(this);
     }
 
+    /**
+     * Gets the player whos turn it is.
+     * 
+     * @return The player.
+     */
     public Player getPlayerTurn() {
         return turn;
     }
 
+    /**
+     * Sets half moves.
+     * 
+     * @param moves The number of half moves.
+     */
     public void setHalfMoves(int moves) {
+        if (moves < 0)
+            throw new IllegalArgumentException("Number of half moves must be positive.");
         halfMoves = moves;
     }
 
+    /**
+     * Gets half moves.
+     * 
+     * @return The number of half moves.
+     */
     public int getHalfMoves() {
         return halfMoves;
     }
 
+    /**
+     * Sets full moves.
+     * 
+     * @param moves The number of full moves.
+     */
     public void setFullMoves(int moves) {
+        if (moves < 0)
+            throw new IllegalArgumentException("Number of full moves must be positive.");
         fullMoves = moves;
     }
 
+    /**
+     * Gets full moves.
+     * 
+     * @return The number of full moves.
+     */
     public int getFullMoves() {
         return fullMoves;
     }
 
+    /**
+     * Gets whether the game is finished.
+     * 
+     * @return {@code true} if the game is finished, {@code false} otherwise.
+     */
     public boolean getGameFinished() {
         return gameFinished;
     }
 
+    /**
+     * Gets the game message. This would be something like "Draw", "Stalemate"...
+     * 
+     * @return The game message.
+     */
     public String getGameMessage() {
         return gameMessage;
     }
 
+    /**
+     * Sets the selected piece.
+     * 
+     * @param piece The piece to set as selected.
+     */
     public void setSelectedPiece(Piece piece) {
         selectedPiece = piece;
     }
 
+    /**
+     * Gets the selected piece.
+     * 
+     * @return The selected piece.
+     */
     public Piece getSelectedPiece() {
         return selectedPiece;
     }
