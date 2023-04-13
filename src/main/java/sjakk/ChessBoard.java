@@ -175,7 +175,7 @@ public class ChessBoard implements Iterable<Piece> {
             loader.setController(new UpgradePawnController());
 
             Node node = loader.load();
-            PopUp popUp = new PopUp("Promote pawn", false, false);
+            PopUp popUp = new PopUp("Promote pawn", false);
             popUp.addNode(node);
             popUp.display();
             switch (UpgradePawnController.getUpgradeChoice()) {
