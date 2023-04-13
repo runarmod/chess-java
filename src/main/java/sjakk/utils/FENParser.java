@@ -20,7 +20,10 @@ import sjakk.pieces.Piece;
 
 /**
  * A utility class for saving, loading, parsing, generating FEN strings to and
- * from files and {@link ChessBoard}s.
+ * from files and {@link ChessBoard}s. The FEN format is described here: <a
+ * href=https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation>Forsyth–Edwards
+ * Notation</a>. All methods in this class are static, and it is not possible to
+ * create an instance FENparser.
  */
 public abstract class FENParser {
     /**

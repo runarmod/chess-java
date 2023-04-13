@@ -1,7 +1,5 @@
 package sjakk.controllers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
@@ -27,6 +25,13 @@ import sjakk.utils.FENParser;
 import sjakk.utils.IllegalFENException;
 import sjakk.utils.PopUp;
 
+/**
+ * This class is the controller for the chess game scene. It handles the chess
+ * game scene, including the images for the pieces, all keypresses, restarting
+ * the game, switching to the title scene and exporting position.
+ * 
+ * @see SceneSwitcher
+ */
 public class ChessGameController extends SceneSwitcher {
     @FXML
     private TextArea moves;
@@ -45,6 +50,12 @@ public class ChessGameController extends SceneSwitcher {
     private static Image allPiecesImg;
     private final static Map<Character, Integer> imgColIdx = Map.of('k', 0, 'q', 1, 'b', 2, 'n', 3, 'r', 4, 'p', 5);
 
+    /**
+     * This constructor is used when the user wants to load a game from a FEN
+     * string.
+     * 
+     * @param FENString the FEN string to load the game from
+     */
     public ChessGameController(String FENString) {
         this.FENString = FENString;
     }
@@ -56,54 +67,75 @@ public class ChessGameController extends SceneSwitcher {
     }
 
     /**
-     * Crops the image of the piece from the image of all pieces and sets it as the
-     * image of this piece.
-     * 
-     * @param pieceType the type of the piece (ex. "King")
+     * Handles the needed logic for restarting a game, using the FEN string if it is
+     * saved. If not, it will use the default FEN string.
      */
-    private ImageView cropPieceImage(Character pieceType, boolean white) {
-        ImageView img = new ImageView(getAllPiecesImg());
-
-        int imgY = (white ? 0 : 1);
-        int coloumnIndex = getPieceImageIndex(pieceType);
-        final int size = 50;
-
-        img.setViewport(new Rectangle2D(coloumnIndex * size, imgY * size, size, size));
-
-        // Shrink to have border visible
-        img.setFitWidth(48);
-        img.setPreserveRatio(true);
-        return img;
-    }
-
     @FXML
     private void handleRestartGame() {
         try {
-            if (FENString.length() > 0) {
-                chessboard = FENParser.getBoardFromFEN(FENString);
-                System.out.println("Read FEN from string");
-            } else {
-                String sep = System.getProperty("file.separator");
-                File inFile = new File(System.getProperty("user.dir") + sep + "games" + sep + "defaultStart.fen");
-                String FENString = FENParser.readFENFromFile(inFile);
-                chessboard = FENParser.getBoardFromFEN(FENString);
-
-                System.out.println("Read FEN from file");
-            }
-        } catch (NullPointerException | IllegalFENException | FileNotFoundException e) {
+            chessboard = FENParser.getBoardFromFEN(FENString);
+            System.out.println("Read FEN from string");
+        } catch (NullPointerException | IllegalFENException e) {
             chessboard = FENParser.getBoardFromDefaultFEN();
             System.out.println("Could not read FEN, using default");
             System.out.println(e.getMessage());
         }
-        allPiecesImg = new Image(ChessBoard.class.getResource("pieces.png").toString());
+        allPiecesImg = new Image(ChessBoard.class.getResource("images/pieces.png").toString());
         drawBoard();
     }
 
+    /**
+     * Handles what should happen when the user clicks on the chessboard.
+     * 
+     * @param event The mouse event that triggered this method.
+     */
     @FXML
     private void handleGridPaneClicked(MouseEvent event) {
         positionPressed(new Position(event));
         drawBoard();
         showGameOver();
+    }
+
+    /**
+     * Draws the board. This includes placing pieces, regenerating the background,
+     * coloring the relevant extra tiles and updating the moves.
+     */
+    @FXML
+    private void drawBoard() {
+        placePieces();
+        regenerateBackgroundBoard();
+        colorBackgrounds();
+        updateMoves();
+    }
+
+    /**
+     * Changes screen to the title screen.
+     */
+    @FXML
+    private void toTitleScreen() {
+        insertPane("TitleScreen.fxml", baseAnchor, new TitleController());
+    }
+
+    /**
+     * Export the game. A popup appears with export options. The file will contain
+     * the FEN position of the game.
+     */
+    @FXML
+    private void exportGame() {
+        String position = chessboard.getFEN();
+        PopUp popUp = new PopUp("Export game", true);
+
+        TextField textField = new TextField(position);
+        textField.setEditable(false);
+        popUp.addNode(textField);
+
+        Button toFileButton = new Button("Export to file");
+        toFileButton.setOnAction(e -> {
+            FENParser.saveToFile(position);
+        });
+        popUp.addNode(toFileButton);
+
+        popUp.display();
     }
 
     /**
@@ -159,10 +191,38 @@ public class ChessGameController extends SceneSwitcher {
         chessboard.setSelectedPiece(null);
     }
 
+    /**
+     * Crops the image of the piece from the image of all pieces and sets it as the
+     * image of this piece.
+     * 
+     * @param pieceType the type of the piece (ex. "King")
+     */
+    private ImageView cropPieceImage(Character pieceType, boolean white) {
+        ImageView img = new ImageView(getAllPiecesImg());
+
+        int imgY = (white ? 0 : 1);
+        int coloumnIndex = getPieceImageIndex(pieceType);
+        final int size = 50;
+
+        img.setViewport(new Rectangle2D(coloumnIndex * size, imgY * size, size, size));
+
+        // Shrink to have border visible
+        img.setFitWidth(48);
+        img.setPreserveRatio(true);
+        return img;
+    }
+
+    /**
+     * Gets the selected piece from the chessboard.
+     */
     private Piece getSelectedPiece() {
         return chessboard.getSelectedPiece();
     }
 
+    /**
+     * Resets the matrix used to store the backgroundcolors for the tiles to every
+     * other white and gray.
+     */
     private void resetGridBackgroundMatrix() {
         gridBackgroundColor = new ArrayList<ArrayList<Color>>();
         for (int i = 0; i < 8; i++) {
@@ -173,6 +233,9 @@ public class ChessGameController extends SceneSwitcher {
         }
     }
 
+    /**
+     * Show a popupscreen with the game over message.
+     */
     private void showGameOver() {
         if (hasShownGameOver)
             return;
@@ -186,14 +249,10 @@ public class ChessGameController extends SceneSwitcher {
         }
     }
 
-    @FXML
-    private void drawBoard() {
-        placePieces();
-        regenerateBackgroundBoard();
-        colorBackgrounds();
-        updateMoves();
-    }
-
+    /**
+     * Places the pieces on the board. First clearing the entire board, then
+     * replacing gridlines and then placing the pieces.
+     */
     private void placePieces() {
         Node gridLines = grid.getChildren().get(0);
         grid.getChildren().clear();
@@ -203,11 +262,20 @@ public class ChessGameController extends SceneSwitcher {
         }
     }
 
+    /**
+     * Gets the image for a piece.
+     * 
+     * @param piece The piece to get the image for.
+     * @return The image for the piece.
+     */
     private ImageView getImage(Piece piece) {
         final char pieceChar = Character.toLowerCase(piece.toChar());
         return cropPieceImage(pieceChar, piece.isWhite());
     }
 
+    /**
+     * Regenerates the background board, the matrix with rectangle elements.
+     */
     private void regenerateBackgroundBoard() {
         if (backgroundBoard.getChildren().size() != 64) {
             backgroundBoard.getChildren().clear();
@@ -219,6 +287,9 @@ public class ChessGameController extends SceneSwitcher {
         }
     }
 
+    /**
+     * Colors the background of the tiles.
+     */
     private void colorBackgrounds() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -228,31 +299,11 @@ public class ChessGameController extends SceneSwitcher {
         }
     }
 
+    /**
+     * Updates the moves text-section.
+     */
     private void updateMoves() {
         moves.setText("    WHITE | BLACK\n" + chessboard.getMoves());
-    }
-
-    @FXML
-    private void toTitleScreen() {
-        insertPane("TitleScreen.fxml", baseAnchor, new TitleController());
-    }
-
-    @FXML
-    private void exportGame() {
-        String position = chessboard.getFEN();
-        PopUp popUp = new PopUp("Export game", true);
-
-        TextField textField = new TextField(position);
-        textField.setEditable(false);
-        popUp.addNode(textField);
-
-        Button toFileButton = new Button("Export to file");
-        toFileButton.setOnAction(e -> {
-            FENParser.saveToFile(position);
-        });
-        popUp.addNode(toFileButton);
-
-        popUp.display();
     }
 
     /**
@@ -266,21 +317,40 @@ public class ChessGameController extends SceneSwitcher {
 
     /**
      * Get the coloumn-index of the image containing all the pieces.
+     * 
+     * @param pieceType The type of piece to get the index for.
+     * @return The index of the image containing all the pieces.
      */
     public static int getPieceImageIndex(Character pieceType) {
         return imgColIdx.get(pieceType);
     }
 
+    /**
+     * Gets the backgraund color of a tile.
+     * 
+     * @param x The x-coordinate of the tile.
+     * @param y The y-coordinate of the tile.
+     * @return The background color of the tile.
+     */
     public Color getGridBackgroundColor(int x, int y) {
         return gridBackgroundColor.get(y).get(x);
     }
 
+    /**
+     * Sets the background color of a tile.
+     * 
+     * @param x     The x-coordinate of the tile.
+     * @param y     The y-coordinate of the tile.
+     * @param color The color to set the tile to.
+     */
     public void setGridBackgroundColor(int x, int y, Color color) {
         gridBackgroundColor.get(y).set(x, color);
     }
 
     /**
-     * Sets the background of all legal moves to light green.
+     * Sets the background of all legal moves for a piece to light green.
+     * 
+     * @param piece The piece to set the legal moves for.
      */
     public void setLegalMovesBackground(Piece piece) {
         for (Position pos : piece.getLegalMoves()) {

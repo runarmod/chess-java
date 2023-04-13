@@ -14,6 +14,13 @@ import javafx.scene.text.Text;
 import sjakk.utils.FENParser;
 import sjakk.utils.PopUp;
 
+/**
+ * This class is the controller for the title scene. It handles the buttons for
+ * playing a new game, loading a game from a FEN string, loading a game from a
+ * file, and playing Fischer Random.
+ * 
+ * @see SceneSwitcher
+ */
 public class TitleController extends SceneSwitcher {
 
     @FXML
@@ -34,18 +41,30 @@ public class TitleController extends SceneSwitcher {
         loadGameBoxWide.setVisible(false);
     }
 
+    /**
+     * This method is called when the user clicks the "Play Chess" button. It will
+     * load the FEN-string and create the board-scene.
+     */
     @FXML
     private void playChess() {
         String FENString = loadGameField.getText();
         insertPane("App.fxml", baseAnchor, new ChessGameController(FENString));
     }
 
+    /**
+     * This method is called when the user clicks the "Play Fischer Random" button.
+     * It creates the board-scene with a random piece-setup.
+     */
     @FXML
     private void playFischerRandom() {
         String FENString = FENParser.generateFischerRandomFEN();
         insertPane("App.fxml", baseAnchor, new ChessGameController(FENString));
     }
 
+    /**
+     * This method is called when the user clicks the "Load Game from String"
+     * button. It will show the inputfields to input the FEN-string.
+     */
     @FXML
     private void loadGameFromString() {
         loadGameBoxWide.setVisible(true);
@@ -53,6 +72,11 @@ public class TitleController extends SceneSwitcher {
         loadGameButton.setVisible(false);
     }
 
+    /**
+     * This method is called when the user clicks the "Load Game from File" button.
+     * It will open a file-explorer where the user can select the wanted file. After
+     * it is selected, the chessboard with that position will load.
+     */
     @FXML
     private void loadGameFromFile() {
         File file = FENParser.getFileFromChooser();

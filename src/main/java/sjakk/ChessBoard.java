@@ -21,8 +21,8 @@ import sjakk.utils.PopUp;
  */
 public class ChessBoard implements Iterable<Piece> {
 
-    private ArrayList<ArrayList<Piece>> board;
-    private ArrayList<String> moves = new ArrayList<String>();
+    private final ArrayList<ArrayList<Piece>> board;
+    private final ArrayList<String> moves = new ArrayList<String>();
     private Piece selectedPiece;
     private Piece lastMovedPiece;
     private Player white;
@@ -102,7 +102,7 @@ public class ChessBoard implements Iterable<Piece> {
         if (!piece.isValidMove(to) && !isCastle)
             throw new IllegalArgumentException("Invalid move");
 
-        Position originalPos = piece.getPos();
+        final Position originalPos = piece.getPos();
         boolean pieceWasCaptured = (getPosition(to) != null);
 
         setPosition(piece.getPos(), null);
@@ -148,9 +148,9 @@ public class ChessBoard implements Iterable<Piece> {
      * @return {@code true} if the player is in check, {@code false} otherwise.
      */
     public boolean inCheck(Player player) {
-        for (Piece piece : this) {
+        for (final Piece piece : this) {
             if (piece.getOwner() == player && piece instanceof King) {
-                King king = (King) piece;
+                final King king = (King) piece;
                 return king.inCheck();
             }
         }
@@ -167,8 +167,8 @@ public class ChessBoard implements Iterable<Piece> {
         String movesString = "";
         for (int i = 0; i < moves.size(); i++) {
             if (i % 2 == 0) {
-                int moveNr = (i / 2 + 1);
-                String moveNrString = String.format("%2s", moveNr);
+                final int moveNr = (i / 2 + 1);
+                final String moveNrString = String.format("%2s", moveNr);
                 movesString += moveNrString + ". ";
                 movesString += moves.get(i);
             } else {
@@ -374,7 +374,7 @@ public class ChessBoard implements Iterable<Piece> {
     private boolean handleEnPassantMove(Piece piece) {
         if (piece instanceof Pawn && ((Pawn) piece).getHasMadeEnPassant()) {
             System.out.println("Pawn has made an passant");
-            Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
+            final Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
             setPosition(pos, null);
             return true;
         }
@@ -389,12 +389,12 @@ public class ChessBoard implements Iterable<Piece> {
     private void promotePawn(Pawn piece) {
         Piece newPiece;
         try {
-            URL url = getClass().getResource("/sjakk/UpgradePawn.fxml");
-            FXMLLoader loader = new FXMLLoader(url);
+            final URL url = getClass().getResource("/sjakk/UpgradePawn.fxml");
+            final FXMLLoader loader = new FXMLLoader(url);
             loader.setController(new UpgradePawnController());
 
-            Node node = loader.load();
-            PopUp popUp = new PopUp("Promote pawn", false);
+            final Node node = loader.load();
+            final PopUp popUp = new PopUp("Promote pawn", false);
             popUp.addNode(node);
             popUp.display();
             switch (UpgradePawnController.getUpgradeChoice()) {
@@ -487,9 +487,9 @@ public class ChessBoard implements Iterable<Piece> {
     private boolean inStalemate(Player player) {
         if (inCheck(player))
             return false;
-        for (Piece piece : this) {
+        for (final Piece piece : this) {
             if (piece.getOwner() == player) {
-                for (Position pos : piece.getLegalMoves()) {
+                for (final Position pos : piece.getLegalMoves()) {
                     if (piece.isValidMove(pos))
                         return false;
                 }
@@ -507,9 +507,9 @@ public class ChessBoard implements Iterable<Piece> {
     private boolean inCheckmate(Player player) {
         if (!inCheck(player))
             return false;
-        for (Piece piece : this) {
+        for (final Piece piece : this) {
             if (piece.getOwner() == player) {
-                for (Position pos : piece.getLegalMoves()) {
+                for (final Position pos : piece.getLegalMoves()) {
                     if (piece.isValidMove(pos))
                         return false;
                 }
