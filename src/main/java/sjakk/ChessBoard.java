@@ -333,6 +333,15 @@ public class ChessBoard implements Iterable<Piece> {
     }
 
     /**
+     * Gets the pawn that can be upgraded.
+     * 
+     * @return The pawn that can be upgraded.
+     */
+    public Pawn getUpgradablePawn() {
+        return this.upgradablePawn;
+    }
+
+    /**
      * Disables castling for the player if the king or rook has moved. If king
      * moves, both sides are disabled. If rook moves, only the side the rook started
      * on is disabled.
@@ -487,9 +496,5 @@ public class ChessBoard implements Iterable<Piece> {
             }
         }
         return true;
-    }
-
-    public Pawn getUpgradablePawn() {
-        return this.upgradablePawn;
     }
 }
