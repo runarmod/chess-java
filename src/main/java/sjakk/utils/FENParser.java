@@ -263,6 +263,10 @@ public abstract class FENParser {
             }
         }
 
+        // Did not select file
+        if (file == null)
+            return;
+
         if (!file.getName().endsWith("." + FEN_EXTENSION)) {
             file = new File(file.getAbsolutePath() + "." + FEN_EXTENSION);
         }
@@ -365,34 +369,26 @@ public abstract class FENParser {
 
     /**
      * Get a valid {@link JFileChooser}, with correct settings already set, for
-     * saving a FEN file.
+     * saving a FEN file. This makes sure a confirm dialog is shown if user tries to
+     * overwrite a file.
      * 
      * @param defaultSaveDirectory the directory to start the file chooser in.
      * @return a valid {@link JFileChooser}.
      */
     private static JFileChooser getValidChooser(File defaultSaveDirectory) {
         final JFileChooser chooser = new JFileChooser(defaultSaveDirectory) {
-            // The following method is heavily inspired by stackoverflow:
-            // https://stackoverflow.com/a/3729157/10880273
             @Override
             public void approveSelection() {
                 final File file = getSelectedFile();
+
                 if (file.exists() && getDialogType() == SAVE_DIALOG) {
                     final int result = JOptionPane.showConfirmDialog(this, "The file exists, overwrite?",
-                            "Existing file",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-                    switch (result) {
-                        case JOptionPane.YES_OPTION:
-                            super.approveSelection();
-                            return;
-                        case JOptionPane.NO_OPTION:
-                            return;
-                        case JOptionPane.CLOSED_OPTION:
-                            return;
-                        case JOptionPane.CANCEL_OPTION:
-                            cancelSelection();
-                            return;
-                    }
+                            "Existing file", JOptionPane.YES_NO_OPTION);
+
+                    if (result == JOptionPane.YES_OPTION)
+                        super.approveSelection();
+
+                    return;
                 }
                 super.approveSelection();
             }

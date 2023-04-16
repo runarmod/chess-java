@@ -43,6 +43,15 @@ public class TitleController extends SceneSwitcher {
 
     /**
      * This method is called when the user clicks the "Play Chess" button. It will
+     * load the default FEN-string and create the board-scene.
+     */
+    @FXML
+    private void playChessDefault() {
+        insertPane("App.fxml", baseAnchor, new ChessGameController());
+    }
+
+    /**
+     * This method is called when the user clicks the "Start Game" button. It will
      * load the FEN-string and create the board-scene.
      */
     @FXML

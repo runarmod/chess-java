@@ -53,6 +53,14 @@ public class ChessGameController extends SceneSwitcher {
     private final static Map<Character, Integer> imgColIdx = Map.of('k', 0, 'q', 1, 'b', 2, 'n', 3, 'r', 4, 'p', 5);
 
     /**
+     * This constructor is used when the user wants to play a new game with default
+     * setup.
+     */
+    public ChessGameController() {
+        this.FENString = FENParser.DEFAULT_STRING;
+    }
+
+    /**
      * This constructor is used when the user wants to load a game from a FEN
      * string.
      * 
@@ -76,13 +84,13 @@ public class ChessGameController extends SceneSwitcher {
     private void handleRestartGame() {
         try {
             chessboard = FENParser.getBoardFromFEN(FENString);
-            System.out.println("Read FEN from string");
         } catch (NullPointerException | IllegalFENException e) {
             chessboard = FENParser.getBoardFromDefaultFEN();
             PopUp popup = new PopUp("Error loading FEN", true);
             popup.addNode(new Text("Could not read FEN, using default"));
             popup.display();
         }
+
         hasShownGameOver = false;
         allPiecesImg = new Image(ChessBoard.class.getResource("images/pieces.png").toString());
         drawBoard();
