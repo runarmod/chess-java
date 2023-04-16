@@ -22,6 +22,7 @@ class ChessBoard {
 class Position {
     -int x
     -int y
+
     +int getX()
     +int getY()
 }
@@ -70,6 +71,14 @@ class Rook {
 }
 
 class Pawn {
+    -boolean hasMoved
+    -boolean hasMadeAnPassant
+
+    +void setHasMadeAnPassant(boolean hasMadeAnPassant)
+    +boolean getHasMadeEnPassant()
+    -boolean isValidStraightMove(Position to)
+    -boolean isValidCaptureMove(Position to)
+    -boolean moveIsEnPassant(Position to)
 }
 
 class Knight {
@@ -88,18 +97,17 @@ class King {
 }
 
 Player "2" *-- "1" ChessBoard : "players"
-ChessBoard "1" o-r- "n" Piece : "pieces"
+ChessBoard "1" o-r- "*" Piece : "pieces"
 Position "1" o-- "1" Piece : "position"
-Player "1" *-r- "1" Piece : "owner"
+Player "1" *-r- "*" Piece : "owner"
 
 Piece <|-- Pawn
 Piece <|-- Knight
 Piece <|-- King
-Piece <|-r- LinearPiece
+Piece <|-u- LinearPiece
 
-LinearPiece <|-u- Bishop
-LinearPiece <|-u- Queen
-LinearPiece <|-u- Rook
-
+LinearPiece <|-d- Bishop
+LinearPiece <|-d- Queen
+LinearPiece <|-d- Rook
 
 @enduml
