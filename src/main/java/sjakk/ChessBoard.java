@@ -109,7 +109,7 @@ public class ChessBoard implements Iterable<Piece> {
         pieceWasCaptured |= handleEnPassantMove(piece);
 
         lastMovedPiece = piece;
-        piece.addMovedCount();
+        piece.addMoveCount();
 
         if (!isCastle || piece instanceof King) {
             moves.add(piece.getPos().toString() + to.toString());
@@ -496,5 +496,9 @@ public class ChessBoard implements Iterable<Piece> {
             }
         }
         return true;
+    }
+
+    public void addMove(String string) {
+        moves.add(string);
     }
 }

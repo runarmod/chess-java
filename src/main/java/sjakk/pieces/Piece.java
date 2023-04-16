@@ -200,7 +200,7 @@ public abstract class Piece {
     /**
      * Adds one to the move count.
      */
-    public void addMovedCount() {
+    public void addMoveCount() {
         moveCount++;
     }
 

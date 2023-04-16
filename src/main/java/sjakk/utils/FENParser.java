@@ -16,6 +16,7 @@ import sjakk.ChessBoard;
 import sjakk.PieceColor;
 import sjakk.Player;
 import sjakk.Position;
+import sjakk.pieces.Pawn;
 import sjakk.pieces.Piece;
 
 /**
@@ -91,7 +92,14 @@ public abstract class FENParser {
         }
 
         // Starting player
-        board.setTurn(data[1].equals("w") ? PieceColor.WHITE : PieceColor.BLACK);
+        if (data[1].equals("w")) {
+            board.setTurn(PieceColor.WHITE);
+        } else if (data[1].equals("b")) {
+            board.setTurn(PieceColor.BLACK);
+            board.addMove("----");
+        } else {
+            throw new IllegalFENException("Invalid FEN string");
+        }
 
         // Castling rights
         board.disableCastling();
@@ -114,11 +122,11 @@ public abstract class FENParser {
 
         // En passant target
         String enPassantTarget = data[3].equals("-") ? null : data[3];
-        if (enPassantTarget != null){
+        if (enPassantTarget != null) {
             Position enPassantTargetPosition = new Position(enPassantTarget);
             int pawnY = (enPassantTargetPosition.getY() == 2 ? 3 : 4);
             Piece pawn = board.getPosition(new Position(enPassantTargetPosition.getX(), pawnY));
-            pawn.addMovedCount();
+            pawn.addMoveCount();
             board.setLastPieceMoved(pawn);
         }
 
@@ -234,8 +242,18 @@ public abstract class FENParser {
         // What can be castled?
         FENString.append(" " + board.getCastlingRights());
 
-        // TODO: Can there be made en passant? Where?
-        FENString.append(" -");
+        // Is there an en passant target? Where?
+        Piece lastPieceMoved = board.getLastPieceMoved();
+        if (lastPieceMoved instanceof Pawn && lastPieceMoved.getMoveCount() == 1
+                && (lastPieceMoved.getPos().getY() == 3 || lastPieceMoved.getPos().getY() == 4)) {
+
+            int direction = -lastPieceMoved.getOwner().getDir();
+            Position targetPosition = lastPieceMoved.getPos().add(new Position(0, direction));
+            FENString.append(" " + targetPosition.toString());
+
+        } else {
+            FENString.append(" -");
+        }
 
         // Halfmoves
         FENString.append(" " + board.getHalfMoves());
