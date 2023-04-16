@@ -26,7 +26,7 @@ public class ChessBoardMoveTest {
 
                 board.move(board.getPosition(new Position(0, 1)), new Position(0, 3));
 
-                assertEquals("rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1", board.getFEN(),
+                assertEquals("rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1", board.getFEN(),
                                 "Game position is not correct after move.");
         }
 
