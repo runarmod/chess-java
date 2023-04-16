@@ -44,6 +44,29 @@ public class Position {
     }
 
     /**
+     * Creates a new position from the given string. The string must be in the
+     * format "a1", "b2", etc. x- and y-positions 0, 1, 2,... corresponds to a, b,
+     * c,..., and 1, 2, 3,..., respectively.
+     * 
+     * @param position the position string
+     */
+    public Position(String position) {
+        if (position.length() != 2) {
+            throw new IllegalArgumentException("Invalid position string: " + position);
+        }
+
+        char x = position.charAt(0);
+        char y = position.charAt(1);
+
+        if (x < 'a' || x > 'h' || y < '1' || y > '8') {
+            throw new IllegalArgumentException("Invalid position string: " + position);
+        }
+
+        this.x = x - 'a';
+        this.y = y - '1';
+    }
+
+    /**
      * Returns the x coordinate of this position.
      * 
      * @return the x coordinate

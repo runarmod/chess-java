@@ -377,7 +377,7 @@ public class ChessBoard implements Iterable<Piece> {
      */
     private boolean handleEnPassantMove(Piece piece) {
         if (piece instanceof Pawn && ((Pawn) piece).getHasMadeEnPassant()) {
-            System.out.println("Pawn has made an passant");
+            System.out.println("Pawn has made en passant");
             final Position pos = new Position(piece.getX(), piece.getY() - piece.getOwner().getDir());
             setPosition(pos, null);
             return true;

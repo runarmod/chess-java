@@ -71,6 +71,7 @@ public abstract class FENParser {
             throw new IllegalFENException("Invalid FEN string");
         }
 
+        // Board
         for (int i = 0; i < 8; i++) {
             final String row = rows[i];
 
@@ -111,12 +112,20 @@ public abstract class FENParser {
             }
         }
 
-        // TODO: possible en passant target
-        // board.setLastPieceMoved(data[3].equals("-") ? null :
-        // Piece.getPiece(data[3].charAt(0), new Position(0, 0), board));
+        // En passant target
+        String enPassantTarget = data[3].equals("-") ? null : data[3];
+        if (enPassantTarget != null){
+            Position enPassantTargetPosition = new Position(enPassantTarget);
+            int pawnY = (enPassantTargetPosition.getY() == 2 ? 3 : 4);
+            Piece pawn = board.getPosition(new Position(enPassantTargetPosition.getX(), pawnY));
+            pawn.addMovedCount();
+            board.setLastPieceMoved(pawn);
+        }
 
+        // Half moves
         board.setHalfMoves(Integer.parseInt(data[4]));
 
+        // Full moves
         board.setFullMoves(Integer.parseInt(data[5]));
 
         return board;
