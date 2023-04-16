@@ -79,8 +79,9 @@ public class ChessGameController extends SceneSwitcher {
             System.out.println("Read FEN from string");
         } catch (NullPointerException | IllegalFENException e) {
             chessboard = FENParser.getBoardFromDefaultFEN();
-            System.out.println("Could not read FEN, using default");
-            System.out.println(e.getMessage());
+            PopUp popup = new PopUp("Error loading FEN", true);
+            popup.addNode(new Text("Could not read FEN, using default"));
+            popup.display();
         }
         hasShownGameOver = false;
         allPiecesImg = new Image(ChessBoard.class.getResource("images/pieces.png").toString());
