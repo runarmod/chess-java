@@ -112,7 +112,7 @@ public class ChessBoard implements Iterable<Piece> {
         piece.addMoveCount();
 
         if (!isCastle || piece instanceof King) {
-            moves.add(piece.getPos().toString() + to.toString());
+            moves.add(originalPos.toString() + to.toString());
             handleHalfMove(piece);
             handleFullMove(piece, pieceWasCaptured);
             turn = (turn == white ? black : white);
