@@ -13,4 +13,4 @@ This is a chess-game made using Java and JavaFX originally for a project in the 
 
 ## How to run
 
-To run the game, you need to have Java 17 or newer and JavaFX 19 installed. Then you can run the game by running the `main`-method in the [`App`](src\main\java\sjakk\App.java)-class.
+To run the game, you need to have Java 17 or newer and JavaFX 19 installed. Then you can run the game by running the `main`-method in the [`App`](src/main/java/sjakk/App.java)-class.
